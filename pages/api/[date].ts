@@ -202,7 +202,7 @@ export default function handler(
   // const slug = req.query.slug as string
   const date = req.query.date as string
 
-  // TODO: Get dailySettings, storedSets and other data
+  // TODO: Get stored daily workout data from database
 
   const { todaysReps, todaysSet } = getTodaysReps(
     date,
