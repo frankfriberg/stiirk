@@ -1,5 +1,5 @@
 import { Schema, models, model, Document, Model } from 'mongoose'
-import { ExerciseModel } from '../../models/exercise.model'
+import { ExerciseModel } from '../exercise/exercise.model'
 
 import { Daily, DailyWorkout } from 'types/daily.types'
 

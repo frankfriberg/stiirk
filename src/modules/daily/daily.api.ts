@@ -1,25 +1,20 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import { DailyModel } from 'modules/daily/daily.model'
+import { ReturnedDailyWorkout } from 'types/daily.types'
 import createDaily from './daily.service'
 
-export function getDaily(req: NextApiRequest, res: NextApiResponse) {
-  const { slug } = req.query
-  DailyModel.findOne({ slug: slug })
-    .populate({
-      path: 'workouts',
-      populate: {
-        path: 'exercises.exercise',
-      },
-    })
-    .then((daily) => {
-      if (daily) {
-        createDaily(daily).then((dailyWorkout) => {
-          return res.status(200).json(dailyWorkout)
-        })
-      }
-      throw new Error(`${slug} not found`)
-    })
-    .catch((error) => {
-      return res.status(404).json({ success: false, message: error.message })
-    })
+export async function getDaily(
+  slug: string | string[]
+): Promise<ReturnedDailyWorkout | Error> {
+  const daily = await DailyModel.findOne({ slug: slug }).populate({
+    path: 'workouts',
+    populate: {
+      path: 'exercises.exercise',
+    },
+  })
+
+  if (!daily) {
+    throw new Error(`${slug} not found`)
+  }
+
+  return createDaily(daily).then((dailyWorkout) => dailyWorkout)
 }

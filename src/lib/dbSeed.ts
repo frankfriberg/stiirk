@@ -1,6 +1,6 @@
 import dbConnect from './dbConnect'
-import { ExerciseModel } from 'models/exercise.model'
-import { DailyModel, DailyWorkoutModel } from 'models/daily.model'
+import { ExerciseModel } from 'modules/exercise/exercise.model'
+import { DailyModel, DailyWorkoutModel } from 'modules/daily/daily.model'
 import { Exercise, ExerciseForceEnum } from 'types/exercise.types'
 import { Daily, DailyWorkout } from 'types/daily.types'
 

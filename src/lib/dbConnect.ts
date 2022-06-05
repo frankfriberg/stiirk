@@ -35,8 +35,6 @@ async function dbConnect() {
     })
   }
 
-  if (process.env.NODE_ENV === 'development') await seedDaily()
-
   cached.conn = await cached.promise
   return cached.conn
 }
