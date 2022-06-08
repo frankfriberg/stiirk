@@ -1,7 +1,6 @@
 import { DailyModel } from 'modules/daily/daily.model'
 import { NextApiHandler } from 'next'
 import { ApiError } from 'next/dist/server/api-utils'
-import { ReturnedDailyWorkout } from 'types/daily.types'
 import createDaily from './daily.service'
 
 export const getDaily: NextApiHandler = async (req, res) => {
@@ -23,4 +22,16 @@ export const getDaily: NextApiHandler = async (req, res) => {
   } catch (error) {
     throw error
   }
+}
+
+export const createNewDaily: NextApiHandler = async (req, res) => {
+  // TODO: #9 Add update handler to DailyAPI
+}
+
+export const updateDaily: NextApiHandler = async (req, res) => {
+  // TODO: #9 Add update handler to DailyAPI
+}
+
+export const deleteDaily: NextApiHandler = async (req, res) => {
+  // TODO: #9 Add update handler to DailyAPI
 }

@@ -1,6 +1,5 @@
 import { ValidationError } from 'lib/errorHandler'
 import { NextApiHandler } from 'next'
-import { ApiError } from 'next/dist/server/api-utils'
 import { ExerciseModel } from './exercise.model'
 
 export const listExercises: NextApiHandler = (req, res) => {
