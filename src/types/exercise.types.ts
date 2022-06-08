@@ -5,7 +5,7 @@ export enum ExerciseForceEnum {
   Pull = 'pull',
 }
 
-export interface Exercise extends StiirkDocument {
+export interface IExercise extends StiirkDocument {
   title: string
   slug: string
   primary?: string[]

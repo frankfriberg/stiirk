@@ -1,4 +1,4 @@
-import { Exercise } from './exercise.types'
+import { IExercise } from './exercise.types'
 import { StiirkDocument } from './mongoose.types'
 
 interface ReturningExercise {
@@ -6,7 +6,7 @@ interface ReturningExercise {
   reps: number[]
 }
 
-export interface Daily extends StiirkDocument {
+export interface IDaily extends StiirkDocument {
   slug: string
   startDate: Date
   settings: DailyWorkoutSettings
@@ -26,8 +26,8 @@ export interface DailyWorkout extends StiirkDocument {
   exercises: DailyExercise[]
 }
 
-export interface DailyExercise extends StiirkDocument {
-  exercise: Exercise
+export interface DailyExercise {
+  exercise: IExercise
   max: number
   min: number
   leftright: boolean
