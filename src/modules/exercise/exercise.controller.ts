@@ -39,7 +39,9 @@ export const editExercise: NextApiHandler = (req, res) => {
     .catch((error) => error)
 }
 
-export const deleteExercise: NextApiHandler = (req, res) => {}
+export const deleteExercise: NextApiHandler = (req, res) => {
+  // TODO: #8 Add delete handler to ExerciseAPI
+}
 
 export const deleteAllExercises: NextApiHandler = (req, res) => {
   return ExerciseModel.deleteMany({})
