@@ -1,3 +1,4 @@
+import { ApiError } from 'next/dist/server/api-utils'
 import { Daily, DailyExercise, ReturnedDailyWorkout } from 'types/daily.types'
 
 const getExercisesAmount = (sets: number, maxSets: number) =>
@@ -21,7 +22,9 @@ function getTodaysReps(date: Date, startReps: number, numberOfSets: number) {
   }
 }
 
-async function createDaily(daily: Daily): Promise<ReturnedDailyWorkout> {
+async function createDaily(
+  daily: Daily
+): Promise<ReturnedDailyWorkout | ApiError> {
   const { workouts, settings } = daily
   const { todaysNumber, todaysReps, todaysSet } = getTodaysReps(
     daily.startDate,
@@ -46,6 +49,9 @@ async function createDaily(daily: Daily): Promise<ReturnedDailyWorkout> {
   for (let i = 0; i < exercisesAmount; i++) {
     const dailyExercise = todaysWorkout.exercises[i]
     const exercise = dailyExercise.exercise
+
+    if (!exercise) throw new ApiError(400, 'Exercise no longer exists')
+
     const exerciseRepRatio = getRepRatio(
       dailyExercise,
       exercisesReps,
@@ -57,6 +63,7 @@ async function createDaily(daily: Daily): Promise<ReturnedDailyWorkout> {
       const calcReps = Math.round((exerciseRepRatio / 100) * ratio)
       reps.push(calcReps < dailyExercise.min ? dailyExercise.min : calcReps)
     }
+    console.log(dailyExercise)
 
     workout.exercises.push({
       name: dailyExercise.leftright ? `LR ${exercise.title}` : exercise.title,

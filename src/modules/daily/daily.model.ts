@@ -47,6 +47,7 @@ const DailyWorkoutSchema = new Schema<DailyWorkout>({
   numberOfExercises: Number,
   exercises: [
     {
+      _id: false,
       exercise: {
         type: Schema.Types.ObjectId,
         ref: 'Exercise',

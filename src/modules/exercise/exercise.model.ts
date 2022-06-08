@@ -1,4 +1,5 @@
-import { Schema, model, models, Model } from 'mongoose'
+import { Schema, model, models } from 'mongoose'
+import { ApiError } from 'next/dist/server/api-utils'
 import { Exercise } from 'types/exercise.types'
 
 const ExerciseSchema = new Schema<Exercise>({
@@ -9,6 +10,7 @@ const ExerciseSchema = new Schema<Exercise>({
   slug: {
     type: String,
     required: [true, 'Slug cannot be empty'],
+    unique: true,
   },
   primary: [String],
   secondary: [String],
@@ -17,6 +19,14 @@ const ExerciseSchema = new Schema<Exercise>({
     enum: ['push', 'pull'],
     default: 'push',
   },
+})
+
+ExerciseSchema.post('save', (error: any, doc: Exercise, next: Function) => {
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    next(new ApiError(400, `Exercise "${doc.slug}" already exists`))
+  } else {
+    next()
+  }
 })
 
 const ExerciseModel = models.Exercise || model('Exercise', ExerciseSchema)

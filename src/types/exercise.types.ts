@@ -8,7 +8,7 @@ export enum ExerciseForceEnum {
 export interface Exercise extends StiirkDocument {
   title: string
   slug: string
-  primary: string[]
-  secondary: string[]
+  primary?: string[]
+  secondary?: string[]
   force: string
 }
