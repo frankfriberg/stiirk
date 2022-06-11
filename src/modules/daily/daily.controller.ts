@@ -1,37 +1,50 @@
-import { DailyModel } from 'modules/daily/daily.model'
-import { NextApiHandler } from 'next'
+import { apiReturn, StiirkApiHandler } from 'lib/apiHandler'
+import { Daily } from 'modules/daily/daily.model'
 import { ApiError } from 'next/dist/server/api-utils'
 import createDaily from './daily.service'
 
-export const getDaily: NextApiHandler = async (req, res) => {
-  const { slug } = req.query
-  const daily = await DailyModel.findOne({ slug: slug }).populate({
-    path: 'workouts',
-    populate: {
-      path: 'exercises.exercise',
-    },
-  })
-
-  if (!daily) {
-    throw new ApiError(404, `${slug} not found`)
-  }
-
-  try {
-    const dailyWorkout = await createDaily(daily)
-    return res.status(200).json(dailyWorkout)
-  } catch (error) {
-    throw error
-  }
+export const createNewDaily: StiirkApiHandler = (params) => {
+  const { body } = params
+  return Daily.create(body)
+    .then((createdDaily) => apiReturn(201, createdDaily))
+    .catch((error) => error)
 }
 
-export const createNewDaily: NextApiHandler = async (req, res) => {
-  // TODO: #9 Add update handler to DailyAPI
+export const getDailyBySlug: StiirkApiHandler = async (params) => {
+  const { slug } = params
+  return Daily.findOne({ slug: slug })
+    .populate({
+      path: 'workouts',
+      populate: {
+        path: 'exercises.exercise',
+      },
+    })
+    .then(async (daily) => {
+      if (!daily) throw new ApiError(404, `${slug} not found`)
+      const dailyWorkout = await createDaily(daily)
+      return apiReturn(200, daily)
+    })
+    .catch((error) => error)
 }
 
-export const updateDaily: NextApiHandler = async (req, res) => {
-  // TODO: #9 Add update handler to DailyAPI
+export const updateDailyById: StiirkApiHandler = (params) => {
+  const { body } = params
+  return Daily.findByIdAndUpdate(body.id, body)
+    .then((updatedDaily) => {
+      if (!updatedDaily)
+        throw new ApiError(404, `Daily id: ${body.id} not found.`)
+      return apiReturn(200, updatedDaily)
+    })
+    .catch((error) => error)
 }
 
-export const deleteDaily: NextApiHandler = async (req, res) => {
-  // TODO: #9 Add update handler to DailyAPI
+export const deleteDailyById: StiirkApiHandler = (params) => {
+  const { body } = params
+  return Daily.findByIdAndDelete(body.id)
+    .then((deletedDaily) => {
+      if (!deletedDaily)
+        throw new ApiError(404, `Daily id: ${body.id} not found.`)
+      return apiReturn(204, deletedDaily)
+    })
+    .catch((error) => error)
 }

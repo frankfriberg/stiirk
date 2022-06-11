@@ -9,18 +9,18 @@ interface ReturningExercise {
 export interface IDaily extends StiirkDocument {
   slug: string
   startDate: Date
-  settings: DailyWorkoutSettings
-  workouts: DailyWorkout[]
+  settings: IDailyWorkoutSettings
+  workouts: IDailyWorkout[]
 }
 
-export interface DailyWorkoutSettings extends StiirkDocument {
+export interface IDailyWorkoutSettings extends StiirkDocument {
   maxReps: number
   startReps: number
   maxSets: number
   repRatio: number[]
 }
 
-export interface DailyWorkout extends StiirkDocument {
+export interface IDailyWorkout extends StiirkDocument {
   title: string
   numberOfExercises: number
   exercises: DailyExercise[]

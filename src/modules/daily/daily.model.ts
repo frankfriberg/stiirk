@@ -1,9 +1,7 @@
-import { Schema, models, model, Document, Model } from 'mongoose'
-import { ExerciseModel } from '../exercise/exercise.model'
+import { Schema, models, model } from 'mongoose'
+import { IDaily, IDailyWorkout } from 'types/daily.types'
 
-import { Daily, DailyWorkout } from 'types/daily.types'
-
-const DailySchema = new Schema<Daily>({
+const DailySchema = new Schema<IDaily>({
   slug: {
     type: String,
     required: [true, 'Please provide an identifier.'],
@@ -39,7 +37,7 @@ const DailySchema = new Schema<Daily>({
   ],
 })
 
-const DailyWorkoutSchema = new Schema<DailyWorkout>({
+const DailyWorkoutSchema = new Schema<IDailyWorkout>({
   title: {
     type: String,
     required: [true, 'Please provide a title for workout.'],
@@ -68,8 +66,9 @@ const DailyWorkoutSchema = new Schema<DailyWorkout>({
   ],
 })
 
-const DailyModel = models.Daily || model('Daily', DailySchema)
-const DailyWorkoutModel =
-  models.DailyWorkout || model('DailyWorkout', DailyWorkoutSchema)
+const Daily = models.Daily || model<IDaily>('Daily', DailySchema)
+const DailyWorkout =
+  models.DailyWorkout ||
+  model<IDailyWorkout>('DailyWorkout', DailyWorkoutSchema)
 
-export { DailyModel, DailyWorkoutModel }
+export { Daily, DailyWorkout }
