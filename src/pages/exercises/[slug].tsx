@@ -3,7 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const slug: string = context.params!.slug as string
-  const data = await getExerciseBySlug(slug)
+  const data: any = await getExerciseBySlug({ slug: slug })
   const exercise = await data.json()
 
   if (!exercise)

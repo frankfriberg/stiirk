@@ -1,20 +1,19 @@
-import { apiReturn } from 'lib/apiHandler'
+import { apiReturn, StiirkApiHandler } from 'lib/apiHandler'
 import { ValidationError } from 'lib/errorHandler'
 import { NextApiHandler } from 'next'
+import { ApiError } from 'next/dist/server/api-utils'
 import Exercise from './exercise.model'
 
-export async function listExercises() {
-  const exercises = await Exercise.find({})
-
+export function listExercises() {
   return Exercise.find({})
     .then((exercises) => apiReturn(200, exercises))
     .catch((error) => error)
 }
 
-export const createExercise: NextApiHandler = (req, res) => {
-  const data = req.body
+export const createExercise: StiirkApiHandler = (params) => {
+  const { body } = params
 
-  return Exercise.create(data)
+  return Exercise.create(body)
     .then((exercise) => apiReturn(201, exercise))
     .catch((error) => {
       if (error.name === 'ValidationError') {
@@ -31,9 +30,13 @@ export const createExercise: NextApiHandler = (req, res) => {
     })
 }
 
-export function getExerciseBySlug(slug: string) {
-  return Exercise.findOne({ slug: slug })
-    .then((exercise) => apiReturn(200, exercise))
+export const getExerciseBySlug: StiirkApiHandler = (params) => {
+  return Exercise.findOne({ slug: params.slug })
+    .then((exercise) => {
+      if (!exercise)
+        throw new ApiError(404, `Exercise ${params.slug} not found.`)
+      return apiReturn(200, exercise)
+    })
     .catch((error) => error)
 }
 
