@@ -30,7 +30,7 @@ const ExerciseSchema = new Schema<IExercise>(
 
 ExerciseSchema.post('save', (error: any, doc: IExercise, next: Function) => {
   if (error.name === 'MongoServerError' && error.code === 11000) {
-    next(new ApiError(400, `Exercise "${doc.slug}" already exists`))
+    throw new ApiError(400, `Exercise "${doc.slug}" already exists`)
   } else {
     next()
   }
