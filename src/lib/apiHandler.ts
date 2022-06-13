@@ -1,6 +1,6 @@
+import dbConnect from './dbConnect'
 import { isValidObjectId } from 'mongoose'
 import { NextApiRequest, NextApiResponse } from 'next'
-import dbConnect from './dbConnect'
 import { apiErrorHandler } from './errorHandler'
 
 interface StiirkApiParams {

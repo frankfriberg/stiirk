@@ -1,10 +1,10 @@
-import { listExercises } from 'modules/exercise/exercise.controller'
+import { getAllExercises } from 'modules/exercise/exercise.controller'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Link from 'next/link'
 import { IExercise } from 'types/exercise.types'
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await listExercises()
+  const data = await getAllExercises()
   const exercises = await data.json()
 
   return {
@@ -38,6 +38,9 @@ export default function ExercisesIndex({
   return (
     <div>
       <h1>Exercises</h1>
+      <Link href="exercises/new">
+        <button type="button">Create New Exercise</button>
+      </Link>
       <ul>
         {exercises.map((exercise: IExercise) => (
           <ExerciseComponent key={exercise.id} exercise={exercise} />
