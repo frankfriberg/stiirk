@@ -1,9 +1,11 @@
+import dbConnect from 'lib/dbConnect'
 import { getAllExercises } from 'modules/exercise/exercise.controller'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Link from 'next/link'
 import { IExercise } from 'types/exercise.types'
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  await dbConnect()
   const data = await getAllExercises()
   const exercises = await data.json()
 

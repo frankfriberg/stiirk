@@ -1,7 +1,6 @@
-import { createNewExercise } from 'modules/exercise/exercise.controller'
 import { useRouter } from 'next/router'
-import React from 'react'
 import { useForm, SubmitHandler, SubmitErrorHandler } from 'react-hook-form'
+import { IExercise } from 'types/exercise.types'
 
 type Inputs = {
   title: string
@@ -9,22 +8,43 @@ type Inputs = {
   force: string
 }
 
-export default function ExerciseForm() {
+type Props = {
+  put?: boolean
+  exerciseFill?: IExercise
+}
+
+function ExerciseForm({ put, exerciseFill }: Props) {
   const router = useRouter()
-  const { register, handleSubmit, formState } = useForm<Inputs>()
+  const { register, handleSubmit, formState } = useForm<Inputs>({
+    defaultValues: exerciseFill,
+  })
   const { isSubmitting } = formState
 
   const onSubmit: SubmitHandler<Inputs> = (data, event) => {
     event?.preventDefault()
-    fetch('/api/exercise/', {
-      method: 'POST',
+    const url = put ? `/api/exercise/${exerciseFill!.id}` : '/api/exercise/'
+    const method = put ? 'PUT' : 'POST'
+
+    fetch(url, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     })
-      .then((exercise) => router.push(`/exercises/${data.slug}`))
-      .catch((error) => console.error(error))
+      .then(async (response) => {
+        const data = await response.json()
+
+        if (!response.ok) {
+          const error = (data && data.message) || response.statusText
+          return Promise.reject(error)
+        }
+
+        router.push(`/exercises/${data.slug}`)
+      })
+      .catch((error) => {
+        console.error('There was an error!', error)
+      })
   }
 
   const onError: SubmitErrorHandler<Inputs> = (errors, e) => {
@@ -56,8 +76,12 @@ export default function ExerciseForm() {
 
       <button disabled={isSubmitting}>
         {isSubmitting && <span>Creating exercise...</span>}
-        Create Exercise
+        Send Request
       </button>
     </form>
   )
 }
+
+ExerciseForm.defaultProps = {}
+
+export default ExerciseForm
