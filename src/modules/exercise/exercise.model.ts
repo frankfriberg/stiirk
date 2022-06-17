@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose'
+import { Schema, model, models, Model } from 'mongoose'
 import { ApiError } from 'next/dist/server/api-utils'
 import { IExercise } from 'types/exercise.types'
 
@@ -36,6 +36,7 @@ ExerciseSchema.post('save', (error: any, doc: IExercise, next: Function) => {
   }
 })
 
-const Exercise = models.Exercise || model('Exercise', ExerciseSchema)
+const Exercise: Model<IExercise> =
+  models.Exercise || model('Exercise', ExerciseSchema)
 
 export default Exercise

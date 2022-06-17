@@ -1,4 +1,4 @@
-import { Schema, models, model } from 'mongoose'
+import { Schema, models, model, Model } from 'mongoose'
 import { IDaily, IDailyWorkout } from 'types/daily.types'
 
 const DailySchema = new Schema<IDaily>({
@@ -66,9 +66,8 @@ const DailyWorkoutSchema = new Schema<IDailyWorkout>({
   ],
 })
 
-const Daily = models.Daily || model<IDaily>('Daily', DailySchema)
-const DailyWorkout =
-  models.DailyWorkout ||
-  model<IDailyWorkout>('DailyWorkout', DailyWorkoutSchema)
+const Daily: Model<IDaily> = models.Daily || model<IDaily>('Daily', DailySchema)
+const DailyWorkout: Model<IDailyWorkout> =
+  models.DailyWorkout || model('DailyWorkout', DailyWorkoutSchema)
 
 export { Daily, DailyWorkout }
