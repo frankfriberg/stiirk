@@ -1,4 +1,4 @@
-import { apiReturn, StiirkApiHandler } from 'lib/apiHandler'
+import { ApiReturn, StiirkApiHandler } from 'lib/apiHandler'
 import { ValidationError } from 'lib/errorHandler'
 import { ApiError } from 'next/dist/server/api-utils'
 import Exercise from './exercise.model'
@@ -6,7 +6,7 @@ import Exercise from './exercise.model'
 // CREATE
 export const createNewExercise: StiirkApiHandler = ({ body }) => {
   return Exercise.create(body)
-    .then((exercise) => apiReturn(201, exercise))
+    .then((exercise) => ApiReturn(201, exercise))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         let valErrors = {}
@@ -24,7 +24,7 @@ export const createNewExercise: StiirkApiHandler = ({ body }) => {
 // READ
 export function getAllExercises() {
   return Exercise.find({})
-    .then((exercises) => apiReturn(200, exercises))
+    .then((exercises) => ApiReturn(200, exercises))
     .catch((error) => error)
 }
 
@@ -32,7 +32,7 @@ export const getExerciseBySlug: StiirkApiHandler = ({ slug }) => {
   return Exercise.findOne({ slug: slug })
     .then((exercise) => {
       if (!exercise) throw new ApiError(404, `Exercise ${slug} not found.`)
-      return apiReturn(200, exercise)
+      return ApiReturn(200, exercise)
     })
     .catch((error) => error)
 }
@@ -54,7 +54,7 @@ export const deleteExerciseById: StiirkApiHandler = ({ id }) => {
     .then((deletedExercise) => {
       if (!deletedExercise)
         throw new ApiError(404, `Exercise id: ${id} not found`)
-      return apiReturn(200, deletedExercise)
+      return ApiReturn(200, deletedExercise)
     })
     .catch((error) => error)
 }

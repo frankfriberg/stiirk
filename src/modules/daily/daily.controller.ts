@@ -1,4 +1,4 @@
-import { apiReturn, StiirkApiHandler } from 'lib/apiHandler'
+import { ApiReturn, StiirkApiHandler } from 'lib/apiHandler'
 import { Daily } from 'modules/daily/daily.model'
 import { ApiError } from 'next/dist/server/api-utils'
 import createDaily from './daily.service'
@@ -6,7 +6,7 @@ import createDaily from './daily.service'
 export const createNewDaily: StiirkApiHandler = (params) => {
   const { body } = params
   return Daily.create(body)
-    .then((createdDaily) => apiReturn(201, createdDaily))
+    .then((createdDaily) => ApiReturn(201, createdDaily))
     .catch((error) => error)
 }
 
@@ -22,7 +22,7 @@ export const getDailyBySlug: StiirkApiHandler = async (params) => {
     .then(async (daily) => {
       if (!daily) throw new ApiError(404, `${slug} not found`)
       const dailyWorkout = await createDaily(daily)
-      return apiReturn(200, daily)
+      return ApiReturn(200, daily)
     })
     .catch((error) => error)
 }
@@ -33,7 +33,7 @@ export const updateDailyById: StiirkApiHandler = (params) => {
     .then((updatedDaily) => {
       if (!updatedDaily)
         throw new ApiError(404, `Daily id: ${body.id} not found.`)
-      return apiReturn(200, updatedDaily)
+      return ApiReturn(200, updatedDaily)
     })
     .catch((error) => error)
 }
@@ -44,7 +44,7 @@ export const deleteDailyById: StiirkApiHandler = (params) => {
     .then((deletedDaily) => {
       if (!deletedDaily)
         throw new ApiError(404, `Daily id: ${body.id} not found.`)
-      return apiReturn(204, deletedDaily)
+      return ApiReturn(204, deletedDaily)
     })
     .catch((error) => error)
 }
