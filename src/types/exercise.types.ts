@@ -5,10 +5,12 @@ export enum ExerciseForceEnum {
   Pull = 'pull',
 }
 
-export interface IExercise extends StiirkDocument {
+export interface Exercise {
   title: string
   slug: string
   primary?: string[]
   secondary?: string[]
   force: string
 }
+
+export interface IExercise extends Exercise, StiirkDocument {}

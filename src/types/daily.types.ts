@@ -1,36 +1,40 @@
 import { IExercise } from './exercise.types'
 import { StiirkDocument } from './mongoose.types'
 
-interface ReturningExercise {
-  name: string
-  reps: number[]
-}
-
-export interface IDaily extends StiirkDocument {
+export interface Daily {
   slug: string
   startDate: Date
-  settings: IDailyWorkoutSettings
-  workouts: IDailyWorkout[]
+  settings: DailyWorkoutSettings
+  workouts: DailyWorkout[]
 }
 
-export interface IDailyWorkoutSettings extends StiirkDocument {
+export interface IDaily extends Daily, StiirkDocument {}
+
+interface DailyWorkoutSettings {
   maxReps: number
   startReps: number
   maxSets: number
   repRatio: number[]
 }
 
-export interface IDailyWorkout extends StiirkDocument {
+export interface DailyWorkout {
   title: string
   numberOfExercises: number
   exercises: DailyExercise[]
 }
 
-export interface DailyExercise {
+export interface IDailyWorkout extends DailyWorkout, StiirkDocument {}
+
+interface DailyExercise {
   exercise: IExercise
   max: number
   min: number
   leftright: boolean
+}
+
+interface ReturningExercise {
+  name: string
+  reps: number[]
 }
 
 export interface ReturnedDailyWorkout {

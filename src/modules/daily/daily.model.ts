@@ -12,6 +12,7 @@ const DailySchema = new Schema<IDaily>({
     required: [true, 'Please provide a start date.'],
   },
   settings: {
+    _id: false,
     maxReps: {
       type: Number,
       default: 20,

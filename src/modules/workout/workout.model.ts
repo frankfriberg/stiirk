@@ -17,6 +17,7 @@ const WorkoutSchema = new Schema<IWorkout>(
       required: [true, 'Slug cannot be empty'],
     },
     timer: {
+      _id: false,
       countdown: {
         type: Boolean,
         default: true,
@@ -31,6 +32,7 @@ const WorkoutSchema = new Schema<IWorkout>(
       },
     },
     settings: {
+      _id: false,
       setRest: {
         type: Number,
         default: 60,
@@ -38,12 +40,14 @@ const WorkoutSchema = new Schema<IWorkout>(
     },
     sets: [
       {
+        _id: false,
         title: String,
         exerciseRest: Number,
         tabata: Boolean,
         iterations: Number,
         round: [
           {
+            _id: false,
             exercise: {
               type: Types.ObjectId,
               ref: 'Exercise',

@@ -1,13 +1,15 @@
 import { IExercise } from './exercise.types'
 import { StiirkDocument } from './mongoose.types'
 
-export interface IWorkout extends StiirkDocument {
+export interface Workout {
   title: string
   slug: string
   timer?: WorkoutTimerSettings
   settings?: WorkoutSettings
   sets: WorkoutSet
 }
+
+export interface IWorkout extends Workout, StiirkDocument {}
 
 interface WorkoutTimerSettings {
   countdown: boolean
