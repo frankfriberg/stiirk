@@ -1,13 +1,27 @@
 import { ApiReturn, StiirkApiHandler } from 'lib/apiHandler'
-import { Daily } from 'modules/daily/daily.model'
+import { ValidationError } from 'lib/errorHandler'
+import { Daily, DailyWorkout } from 'modules/daily/daily.model'
 import { ApiError } from 'next/dist/server/api-utils'
 import createDaily from './daily.service'
+
+// Daily
 
 export const createNewDaily: StiirkApiHandler = (params) => {
   const { body } = params
   return Daily.create(body)
     .then((createdDaily) => ApiReturn(201, createdDaily))
-    .catch((error) => error)
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        let valErrors = {}
+
+        Object.keys(error.errors).forEach((key) => {
+          valErrors[key as keyof Object] = error.errors[key].message
+        })
+
+        throw new ValidationError(400, error.name, valErrors)
+      }
+      throw error
+    })
 }
 
 export const getDailyBySlug: StiirkApiHandler = async (params) => {
@@ -45,6 +59,39 @@ export const deleteDailyById: StiirkApiHandler = (params) => {
       if (!deletedDaily)
         throw new ApiError(404, `Daily id: ${body.id} not found.`)
       return ApiReturn(204, deletedDaily)
+    })
+    .catch((error) => error)
+}
+
+// Daily Workout
+export const createNewDailyWorkout: StiirkApiHandler = ({ body }) => {
+  return DailyWorkout.create(body)
+    .then((createdDailyWorkout) => ApiReturn(201, createdDailyWorkout))
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        let valErrors = {}
+
+        Object.keys(error.errors).forEach((key) => {
+          valErrors[key as keyof Object] = error.errors[key].message
+        })
+
+        throw new ValidationError(400, error.name, valErrors)
+      }
+      throw error
+    })
+}
+
+export const getAllDailyWorkouts = () => {
+  return DailyWorkout.find({})
+    .then((DailyWorkouts) => ApiReturn(200, DailyWorkouts))
+    .catch((error) => error)
+}
+
+export const getDailyWorkoutById: StiirkApiHandler = ({ id }) => {
+  return DailyWorkout.findById(id)
+    .then((workout) => {
+      if (!workout) throw new ApiError(404, `Daily Workout #${id} not found.`)
+      return ApiReturn(200, workout)
     })
     .catch((error) => error)
 }
