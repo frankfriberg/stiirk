@@ -77,8 +77,9 @@ const DailyWorkoutSchema = new Schema<DailyWorkout>(
   options
 )
 
-DailyWorkoutSchema.virtual('numberOfExercises').get(function () {
-  return this.exercises.length
+DailyWorkoutSchema.pre('save', function (next) {
+  this.set({ numberOfExercises: this.exercises.length })
+  next()
 })
 
 const Daily: Model<Daily> = models.Daily || model<Daily>('Daily', DailySchema)
