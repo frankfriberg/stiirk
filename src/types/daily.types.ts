@@ -1,14 +1,15 @@
-import { IExercise } from './exercise.types'
+import { Exercise } from './exercise.types'
 import { StiirkDocument } from './mongoose.types'
+import { HydratedDocument, PopulatedDoc, Types } from 'mongoose'
+
+// Daily Model
 
 export interface Daily {
   slug: string
-  startDate: Date
+  startDate: Date | string
   settings: DailyWorkoutSettings
-  workouts: DailyWorkout[]
+  workouts?: Array<DailyWorkout>
 }
-
-export interface IDaily extends Daily, StiirkDocument {}
 
 interface DailyWorkoutSettings {
   maxReps: number
@@ -17,20 +18,22 @@ interface DailyWorkoutSettings {
   repRatio: number[]
 }
 
+// Daily Workout Model
+
 export interface DailyWorkout {
   title: string
-  numberOfExercises: number
-  exercises: DailyExercise[]
+  numberOfExercises?: number
+  exercises: Array<DailyExercise>
 }
 
-export interface IDailyWorkout extends DailyWorkout, StiirkDocument {}
-
-interface DailyExercise {
-  exercise: IExercise
+export interface DailyExercise {
+  exercise: Exercise
   max: number
   min: number
   leftright: boolean
 }
+
+// Daily Workout API return
 
 interface ReturningExercise {
   name: string
@@ -42,5 +45,5 @@ export interface ReturnedDailyWorkout {
   numberOfExercises: number
   todaysReps: number
   todaysNumber: number
-  exercises: ReturningExercise[]
+  exercises: Array<ReturningExercise>
 }
