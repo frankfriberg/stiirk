@@ -1,10 +1,17 @@
 import dbConnect from 'lib/dbConnect'
 import { getAllExercises } from 'modules/exercise/exercise.controller'
+import { HydratedDocument } from 'mongoose'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Link from 'next/link'
-import { IExercise } from 'types/exercise.types'
+import { Exercise } from 'types/exercise.types'
 
-export const getServerSideProps: GetServerSideProps = async () => {
+interface ExerciseProps {
+  exercise: HydratedDocument<Exercise>
+}
+
+export const getServerSideProps: GetServerSideProps<{
+  exercises: Array<HydratedDocument<Exercise>>
+}> = async () => {
   await dbConnect()
   const data = await getAllExercises()
   const exercises = await data.json()
@@ -12,10 +19,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: { exercises },
   }
-}
-
-type ExerciseProps = {
-  exercise: IExercise
 }
 
 const ExerciseComponent = ({ exercise }: ExerciseProps) => {
@@ -44,9 +47,9 @@ export default function ExercisesIndex({
         <button type="button">Create New Exercise</button>
       </Link>
       <ul>
-        {exercises.map((exercise: IExercise) => (
-          <ExerciseComponent key={exercise.id} exercise={exercise} />
-        ))}
+        {exercises.map((exercise) => {
+          return <ExerciseComponent key={exercise.id} exercise={exercise} />
+        })}
       </ul>
     </div>
   )
