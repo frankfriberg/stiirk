@@ -1,5 +1,19 @@
-import styled from 'styled-components'
+import tw from 'tailwind-styled-components'
 
-const ModalOverlay = styled.div`
-  background-color: rgba(0, 0, 0, 0.75);
+export const ModalOverlay = tw.div`
+  absolute
+  top-0
+  w-screen
+  h-screen
+  backdrop-blur-sm
+  bg-black/20
+`
+
+export const ModalContent = tw.div`
+  p-10
+  fixed
+  w-full
+  rounded-t-lg
+  bottom-0
+  bg-white
 `

@@ -1,5 +1,6 @@
-import { Input } from 'components/Form/Input'
+import { FormInput } from 'components/Form/FormInput'
 import { HydratedDocument } from 'mongoose'
+import React from 'react'
 import { FormProvider } from 'react-hook-form'
 import { Daily } from 'types/daily.types'
 import DailyWorkoutField from './DailyWorkoutField'
@@ -12,46 +13,64 @@ export type DailyFormProps = {
 
 const DailyForm = ({ method, dailyFill }: DailyFormProps) => {
   const { handleSubmit, methods } = useDailyForm({ method, dailyFill })
-
-  const values = methods.watch()
+  const watchSlug = methods.watch('slug').toLowerCase().replace(/[^\w]/gi, '')
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit}>
-        <section>
-          <Input name="slug" label="Slug" />
-          <Input type="date" name="startDate" label="Start Date" />
-
-          <fieldset>
-            <legend>
-              <h2>Settings</h2>
-            </legend>
-            <Input type="number" name="settings.maxReps" label="Max Reps" />
-            <Input type="number" name="settings.startReps" label="Start Reps" />
-            <Input type="number" name="settings.maxSets" label="Max Sets" />
-            <h3>Rep Ratio</h3>
-            <p>How reps will be divided for each set.</p>
+      <form onSubmit={handleSubmit} className="prose">
+        <div>
+          <FormInput
+            name="slug"
+            label="Slug"
+            subtitle={`http://www.stiirk.com/daily/${watchSlug}`}
+          />
+          <FormInput inline type="date" name="startDate" label="Start Date" />
+          <FormInput
+            inline
+            type="number"
+            name="settings.maxReps"
+            label="Max Reps"
+          />
+          <FormInput
+            inline
+            type="number"
+            name="settings.startReps"
+            label="Start Reps"
+          />
+          <FormInput
+            inline
+            type="number"
+            name="settings.maxSets"
+            label="Max Sets"
+          />
+          <span className="ml-4 text-xs text-neutral-500">Rep Ratio</span>
+          <div>
             {Array.from(
               { length: methods.watch('settings.maxSets') },
               (v, i) => {
                 return (
-                  <Input
+                  <FormInput
+                    inline
                     type="number"
+                    label={`Set #${i + 1}`}
                     key={`repratio-${i}`}
                     name={`settings.repRatio[${i}]`}
                   />
                 )
               }
             )}
-          </fieldset>
-        </section>
+          </div>
+        </div>
 
         <DailyWorkoutField />
 
-        <pre>{JSON.stringify(values, null, 2)}</pre>
-
-        <button type="submit">Submit</button>
+        <button className="btn btn-primary" type="submit">
+          Submit
+        </button>
       </form>
+      <pre>
+        <code>{JSON.stringify(methods.watch(), null, 2)}</code>
+      </pre>
     </FormProvider>
   )
 }

@@ -1,6 +1,4 @@
 import { Exercise } from './exercise.types'
-import { StiirkDocument } from './mongoose.types'
-import { HydratedDocument, PopulatedDoc, Types } from 'mongoose'
 
 // Daily Model
 

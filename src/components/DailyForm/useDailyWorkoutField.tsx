@@ -2,7 +2,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import { Daily, DailyWorkout } from 'types/daily.types'
 
 const useDailyWorkout = () => {
-  const { register } = useFormContext()
+  const { register, watch } = useFormContext()
 
   const { fields, append, remove } = useFieldArray<Daily>({
     name: 'workouts',
@@ -21,6 +21,7 @@ const useDailyWorkout = () => {
   }
 
   return {
+    watch,
     fields,
     register,
     addNewWorkout,

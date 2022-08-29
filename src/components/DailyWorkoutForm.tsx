@@ -1,9 +1,8 @@
 import { HydratedDocument } from 'mongoose'
 import { useRouter } from 'next/router'
-import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { Daily, DailyWorkout } from 'types/daily.types'
 import { Exercise } from 'types/exercise.types'
-import Select from 'react-select'
 import React, { useState } from 'react'
 
 type Props = {
@@ -15,9 +14,9 @@ type Props = {
 const DailyWorkoutForm = ({ method, dailyWorkoutFill, exercises }: Props) => {
   const router = useRouter()
   const [search, setSearch] = useState('')
-  const { register, handleSubmit, formState } = useForm<DailyWorkout>()
+  const { register, handleSubmit } = useForm<DailyWorkout>()
 
-  const { isSubmitting, errors } = formState
+  // const { isSubmitting, errors } = formState
 
   const searchExercise: React.ChangeEventHandler<HTMLInputElement> = (
     event
@@ -35,7 +34,7 @@ const DailyWorkoutForm = ({ method, dailyWorkoutFill, exercises }: Props) => {
     event?.preventDefault()
     const url =
       method == 'PUT' ? `api/daily/${dailyWorkoutFill?.id}` : 'api/daily'
-    const redirect = `/daily/${data}`
+    // const redirect = `/daily/${data}`
 
     fetch(url, {
       method: method,
@@ -61,9 +60,9 @@ const DailyWorkoutForm = ({ method, dailyWorkoutFill, exercises }: Props) => {
         console.error(error)
       })
   }
-  const options = exercises.map((exercise) => {
-    return { value: exercise.id, label: exercise.title }
-  })
+  // const options = exercises.map((exercise) => {
+  //   return { value: exercise.id, label: exercise.title }
+  // })
 
   return (
     <>

@@ -5,9 +5,7 @@ import { Exercise } from 'types/exercise.types'
 const useDailyExerciseField = (prefix: number) => {
   const { register, control } = useFormContext<Daily>()
 
-  const exerciseArrayInputPath = `${prefix}.exercises` as 'exercises'
-
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: `workouts.${prefix}.exercises`,
   })
@@ -25,11 +23,16 @@ const useDailyExerciseField = (prefix: number) => {
     remove(exerciseIndex)
   }
 
+  const moveExercise = (start: number, end: number) => {
+    move(start, end)
+  }
+
   return {
     fields,
     register,
     addNewExercise,
     removeExercise,
+    moveExercise,
   }
 }
 

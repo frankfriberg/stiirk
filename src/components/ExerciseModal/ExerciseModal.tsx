@@ -1,3 +1,4 @@
+import { Button } from 'components/Atoms/Button'
 import ExerciseContext from 'components/ExerciseContext'
 import React, { FunctionComponent, useContext, useState } from 'react'
 import { Exercise } from 'types/exercise.types'
@@ -6,7 +7,7 @@ import ExerciseList from './ExerciseList'
 interface ModalProps {
   isShown: boolean
   hide: () => void
-  callback(exercise: Exercise): void
+  callback: (exercise: Exercise) => void
 }
 
 const ExerciseModal: FunctionComponent<ModalProps> = ({
@@ -15,7 +16,6 @@ const ExerciseModal: FunctionComponent<ModalProps> = ({
   callback,
 }) => {
   const [search, setSearch] = useState('')
-  const [selectedExercise, setExercise] = useState<Exercise>()
   const exercises = useContext(ExerciseContext)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,27 +27,20 @@ const ExerciseModal: FunctionComponent<ModalProps> = ({
   })
 
   const modal = (
-    <div className="modal">
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h4>Add Exercise</h4>
-        <button type="button" onClick={hide}>
-          Close Modal
-        </button>
-        <label>
-          <p>Search</p>
-          <input
-            type="search"
-            placeholder="Search Exercises"
-            onChange={handleChange}
-          />
-        </label>
-        <div style={{ overflowY: 'scroll' }}>
-          <ExerciseList
-            filteredExercises={filteredExercises}
-            callback={callback}
-          />
+    <div className="fixed top-0 left-0 w-full h-screen overflow-auto overscroll-contain bg-slate-100">
+      <div className="sticky top-0">
+        <div className="flex items-center justify-between w-full px-3 py-2 border-b bg-slate-100">
+          <h3 className="mt-3">Add Exercise</h3>
+          <Button icon="x" size="small" callback={hide} />
         </div>
+        <input
+          className="w-full p-3 border outline-none border-neutral-500 focus:ring-1 focus:border-black ring-black"
+          type="search"
+          placeholder="Search Exercises"
+          onChange={handleChange}
+        />
       </div>
+      <ExerciseList filteredExercises={filteredExercises} callback={callback} />
     </div>
   )
 

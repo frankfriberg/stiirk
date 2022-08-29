@@ -23,8 +23,10 @@ const DailyIndex = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <ExerciseContext.Provider value={exercises}>
-      <h1>Create new Daily</h1>
-      <DailyForm method="POST" />
+      <div className="p-6 prose bg-slate-100">
+        <h1>Create new Daily</h1>
+        <DailyForm method="POST" />
+      </div>
     </ExerciseContext.Provider>
   )
 }
