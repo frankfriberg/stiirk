@@ -1,3 +1,4 @@
+import { Button } from 'components/Atoms/Button'
 import { FormInput } from 'components/Form/FormInput'
 import { HydratedDocument } from 'mongoose'
 import React from 'react'
@@ -64,13 +65,8 @@ const DailyForm = ({ method, dailyFill }: DailyFormProps) => {
 
         <DailyWorkoutField />
 
-        <button className="btn btn-primary" type="submit">
-          Submit
-        </button>
+        <Button type="submit" label="Create New Workout" />
       </form>
-      <pre>
-        <code>{JSON.stringify(methods.watch(), null, 2)}</code>
-      </pre>
     </FormProvider>
   )
 }

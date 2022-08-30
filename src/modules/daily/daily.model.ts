@@ -11,6 +11,7 @@ const DailySchema = new Schema<Daily>(
       type: String,
       required: [true, 'Please provide an identifier.'],
       maxlength: [50, 'Identifier cant be longer than 50 characters.'],
+      unique: true,
     },
     startDate: {
       type: Schema.Types.Date,

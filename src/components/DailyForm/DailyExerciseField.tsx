@@ -21,7 +21,7 @@ interface Props {
 }
 
 const DailyExerciseField = ({ prefix }: Props) => {
-  const { fields, addNewExercise, removeExercise, moveExercise } =
+  const { fields, getValues, addNewExercise, removeExercise, moveExercise } =
     useDailyExerciseField(prefix)
   const { modalIsShown, toggleModal } = useModal()
   const [activeId, setActiveId] = useState<string | number | null>(null)
@@ -50,7 +50,8 @@ const DailyExerciseField = ({ prefix }: Props) => {
     setActiveId(null)
   }
 
-  const addSelectedExercise = (exercise: Exercise) => addNewExercise(exercise)
+  const addSelectedExercise = (exercise: Exercise) =>
+    addNewExercise(exercise, getValues('settings.maxReps'))
 
   return (
     <div>

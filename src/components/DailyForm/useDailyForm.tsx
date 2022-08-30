@@ -5,7 +5,7 @@ import { Daily, DailyWorkout } from 'types/daily.types'
 import { DailyFormProps } from './DailyForm'
 
 const defaultDaily: Daily = {
-  slug: 'Default',
+  slug: 'New Workout',
   startDate: new Date().toISOString().slice(0, 10),
   settings: {
     maxReps: 30,
@@ -26,6 +26,7 @@ const useDailyForm = ({ method, dailyFill }: DailyFormProps) => {
     event?.preventDefault()
     const url = method == 'PUT' ? `api/daily/${dailyFill?.id}` : 'api/daily'
     const redirect = `/daily/${values.slug}`
+    values.slug = values.slug.toLowerCase().replace(/[^\w]/gi, '')
 
     fetch(url, {
       method: method,
@@ -44,7 +45,7 @@ const useDailyForm = ({ method, dailyFill }: DailyFormProps) => {
         if (method == 'PUT') {
           return router.push(redirect)
         }
-
+        console.log(response)
         return data
       })
       .catch((error) => {

@@ -9,7 +9,8 @@ interface ButtonProps {
   style?: 'white' | 'black' | 'red' | 'blue' | 'green'
   size?: 'small' | 'normal' | 'big'
   className?: string
-  callback(): void
+  type?: 'button' | 'submit'
+  callback?(): void
 }
 
 const iconStyles = {
@@ -52,6 +53,7 @@ export const Button = ({
   style = 'white',
   size = 'normal',
   className,
+  type = 'button',
   callback,
 }: ButtonProps): React.ReactElement => {
   const featherIcon = icon
@@ -65,7 +67,7 @@ export const Button = ({
 
   return (
     <button
-      type="button"
+      type={type}
       onClick={callback}
       className={classNames(
         className,
