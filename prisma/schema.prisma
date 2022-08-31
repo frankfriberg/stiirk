@@ -52,7 +52,7 @@ model Exercise {
   slug           String          @unique
   alias          String[]
   primary        String[]
-  secondary      String
+  secondary      String[]
   force          String
   dailyExercises DailyExercise[]
   workoutRound   WorkoutRound[]
