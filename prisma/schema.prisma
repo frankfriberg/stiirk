@@ -16,33 +16,34 @@ datasource db {
 
 // Daily Workouts
 model Daily {
-  id             String       @id @default(cuid())
-  slug           String       @unique
-  startDate      DateTime
-  maxReps        Int
-  startReps      Int
-  maxSets        Int
-  repRatio       Int[]
-  workouts       DailyWorkout @relation(fields: [dailyWorkoutId], references: [id])
-  dailyWorkoutId String
+  id        String         @id @default(cuid())
+  slug      String         @unique
+  startDate DateTime
+  maxReps   Int
+  startReps Int
+  maxSets   Int
+  repRatio  Int[]
+  workouts  DailyWorkout[]
 }
 
 model DailyWorkout {
   id                String          @id @default(cuid())
   name              String
   numberOfExercises Int
+  dailyId           String
   exercises         DailyExercise[]
-  daily             Daily[]
+  daily             Daily           @relation(fields: [dailyId], references: [id])
 }
 
 model DailyExercise {
-  id            String         @id @default(cuid())
-  max           Int
-  min           Int
-  split         Boolean
-  exerciseId    String
-  exercise      Exercise       @relation(fields: [exerciseId], references: [id])
-  dailyWorkouts DailyWorkout[]
+  id             String       @id @default(cuid())
+  max            Int
+  min            Int
+  split          Boolean
+  exerciseId     String
+  dailyWorkoutId String
+  exercise       Exercise     @relation(fields: [exerciseId], references: [id])
+  dailyWorkouts  DailyWorkout @relation(fields: [dailyWorkoutId], references: [id])
 }
 
 // Exercises
