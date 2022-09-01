@@ -48,26 +48,47 @@ model DailyExercise {
 
 // Exercises
 model Exercise {
-  id             String          @id @default(cuid())
-  name           String
-  slug           String          @unique
-  alias          String[]
-  primary        String[]
-  secondary      String[]
-  force          String
-  dailyExercises DailyExercise[]
-  workoutRound   WorkoutRound[]
+  id              String            @id @default(cuid())
+  name            String
+  slug            String            @unique
+  alias           String[]
+  primary         String[]
+  secondary       String[]
+  force           String
+  updatedAt       DateTime          @updatedAt
+  dailyExercises  DailyExercise[]
+  workoutRound    WorkoutRound[]
+  ExerciseRequest ExerciseRequest[]
+}
+
+model ExerciseRequest {
+  id         String   @id @default(cuid())
+  name       String
+  slug       String   @unique
+  alias      String[]
+  primary    String[]
+  secondary  String[]
+  force      String
+  userId     String
+  exerciseId String
+  user       User     @relation(fields: [userId], references: [id])
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  createdAt  DateTime @default(now())
 }
 
 // Workouts
 model Workout {
   id                String        @id @default(cuid())
+  userId            String
   name              String
   slug              String        @unique
   timerCountdown    Boolean
   timerCountFrom    Int
   timerReadExercise Boolean
   setRest           Int
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  user              User          @relation(fields: [userId], references: [id])
   sets              WorkoutSets[]
 }
 
@@ -75,7 +96,7 @@ model WorkoutSets {
   id           String         @id @default(cuid())
   name         String
   exerciseRest Int
-  tabat        Boolean
+  tabata       Boolean
   iterations   Int
   workoutId    String?
   rounds       WorkoutRound[]
@@ -109,7 +130,7 @@ model Account {
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? //@db.Text
+  id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -125,13 +146,17 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id               String            @id @default(cuid())
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  image            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  accounts         Account[]
+  sessions         Session[]
+  exerciseRequests ExerciseRequest[]
+  workouts         Workout[]
 }
 
 model VerificationToken {
