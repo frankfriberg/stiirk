@@ -1,14 +1,16 @@
 // src/server/router/index.ts
-import { createRouter } from "./context";
-import superjson from "superjson";
+import { createRouter } from './context'
+import superjson from 'superjson'
 
-import { exampleRouter } from "./example";
-import { protectedExampleRouter } from "./protected-example-router";
+import { dailyRouter } from './daily'
+import { exerciseRouter } from './exercise'
+import { workoutRouter } from './workout'
 
 export const appRouter = createRouter()
   .transformer(superjson)
-  .merge("example.", exampleRouter)
-  .merge("auth.", protectedExampleRouter);
+  .merge('daily.', dailyRouter)
+  .merge('exercise.', exerciseRouter)
+  .merge('workout.', workoutRouter)
 
 // export type definition of API
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof appRouter
