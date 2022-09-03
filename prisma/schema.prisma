@@ -17,12 +17,15 @@ datasource db {
 // Daily Workouts
 model Daily {
   id        String         @id @default(cuid())
+  archived  Boolean        @default(false)
   slug      String         @unique
   startDate DateTime
   maxReps   Int
   startReps Int
   maxSets   Int
   repRatio  Int[]
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
   workouts  DailyWorkout[]
 }
 
@@ -63,6 +66,7 @@ model Exercise {
 
 model ExerciseRequest {
   id         String   @id @default(cuid())
+  archived   Boolean  @default(false)
   name       String
   slug       String   @unique
   alias      String[]
@@ -79,6 +83,8 @@ model ExerciseRequest {
 // Workouts
 model Workout {
   id                String        @id @default(cuid())
+  archived          Boolean       @default(false)
+  public            Boolean       @default(false)
   userId            String
   name              String
   slug              String        @unique
@@ -157,6 +163,7 @@ model User {
   sessions         Session[]
   exerciseRequests ExerciseRequest[]
   workouts         Workout[]
+  Daily            Daily[]
 }
 
 model VerificationToken {
