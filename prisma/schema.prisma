@@ -159,8 +159,15 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum Roles {
+  ADMIN
+  EDITOR
+  USER
+}
+
 model User {
   id               String            @id @default(cuid())
+  type             Roles             @default(USER)
   name             String?
   email            String?           @unique
   emailVerified    DateTime?
@@ -171,7 +178,7 @@ model User {
   sessions         Session[]
   exerciseRequests ExerciseRequest[]
   workouts         Workout[]
-  Daily            Daily[]
+  daily            Daily[]
 }
 
 model VerificationToken {
