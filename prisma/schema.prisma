@@ -59,7 +59,6 @@ model Exercise {
   alias           String[]
   primary         String[]
   secondary       String[]
-  force           String
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   dailyExercises  DailyExercise[]
@@ -67,9 +66,15 @@ model Exercise {
   ExerciseRequest ExerciseRequest[]
 }
 
+enum Request {
+  CREATE
+  UPDATE
+}
+
 model ExerciseRequest {
   id         String    @id @default(cuid())
   archived   Boolean   @default(false)
+  type       Request
   name       String
   slug       String    @unique
   alias      String[]
