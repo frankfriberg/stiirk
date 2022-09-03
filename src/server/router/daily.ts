@@ -1,5 +1,6 @@
 import { createRouter } from './context'
 import { z } from 'zod'
+import { createProtectedRouter } from './protected-router'
 
 export const dailyExerciseSchema = z.object({
   max: z.number(),
@@ -23,36 +24,72 @@ export const dailySchema = z.object({
   workouts: z.array(dailyWorkoutSchema).optional(),
 })
 
-export const dailyRouter = createRouter()
-  .mutation('createDaily', {
+const createDailyObject = (input: z.infer<typeof dailySchema>) => {
+  const { workouts, ...baseInput } = input
+
+  const inputData = {
+    ...baseInput,
+    workouts: {
+      create: workouts?.map((workout) => ({
+        name: workout?.name,
+        numberOfExercises: workout.exercises ? workout?.exercises.length : 0,
+        exercises: {
+          create: workout?.exercises,
+        },
+      })),
+    },
+  }
+
+  return inputData
+}
+
+export const protectedDailyRouter = createProtectedRouter()
+  // Create a new Daily plan
+  .mutation('create', {
     input: dailySchema,
     async resolve({ input, ctx }) {
-      // Create workouts with exercises
-      const { workouts, ...baseInput } = input
-
-      const inputData = {
-        ...baseInput,
-        workouts: {
-          create: workouts?.map((workout) => ({
-            name: workout?.name,
-            numberOfExercises: workout.exercises
-              ? workout?.exercises.length
-              : 0,
-            exercises: {
-              create: workout?.exercises,
-            },
-          })),
-        },
-      }
-
-      // Create daily with connect to workouts
       return await ctx.prisma.daily.create({
-        // data: inputData,
-        data: inputData,
+        data: {
+          ...createDailyObject(input),
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
       })
     },
   })
-  .query('getDailyBySlug', {
+  // Updates Daily by ID
+  .mutation('updateById', {
+    input: z.object({ id: z.string(), data: dailySchema }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.daily.update({
+        where: {
+          id: input.id,
+        },
+        data: createDailyObject(input.data),
+      })
+    },
+  })
+  // Archives Daily by ID
+  .mutation('archiveById', {
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.daily.update({
+        where: {
+          id: input,
+        },
+        data: {
+          archived: true,
+        },
+      })
+    },
+  })
+
+export const dailyRouter = createRouter()
+  // Returns a Daily plan by slug
+  .query('getBySlug', {
     input: z.string(),
     async resolve({ input, ctx }) {
       return await ctx.prisma.daily.findUnique({
@@ -60,5 +97,19 @@ export const dailyRouter = createRouter()
           slug: input,
         },
       })
+    },
+  })
+
+  // Returns todays workout from Daily plan
+  // TODO: Add workout filter to todays plan
+  .query('getTodaysBySlug', {
+    input: z.string(),
+    async resolve({ input, ctx }) {
+      const daily = await ctx.prisma.daily.findUnique({
+        where: {
+          slug: input,
+        },
+      })
+      return daily
     },
   })
