@@ -29,6 +29,8 @@ model Daily {
   userId    String
   user      User           @relation(fields: [userId], references: [id])
   workouts  DailyWorkout[]
+
+  @@unique(fields: [id, userId], name: "dailyIdOwner")
 }
 
 model DailyWorkout {
@@ -67,8 +69,8 @@ model Exercise {
 }
 
 enum Request {
-  CREATE
-  UPDATE
+  create
+  update
 }
 
 model ExerciseRequest {
@@ -92,18 +94,20 @@ model ExerciseRequest {
 model Workout {
   id                String        @id @default(cuid())
   archived          Boolean       @default(false)
-  public            Boolean       @default(false)
-  userId            String
+  public            Boolean       @default(true)
+  slug              String
   name              String
-  slug              String        @unique
   timerCountdown    Boolean
   timerCountFrom    Int
   timerReadExercise Boolean
   setRest           Int
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+  userId            String
   user              User          @relation(fields: [userId], references: [id])
   sets              WorkoutSets[]
+
+  @@unique(fields: [id, userId], name: "workoutIdOwner")
 }
 
 model WorkoutSets {
@@ -112,32 +116,36 @@ model WorkoutSets {
   exerciseRest Int
   tabata       Boolean
   iterations   Int
-  workoutId    String?
+  workoutId    String
   rounds       WorkoutRound[]
-  workout      Workout?       @relation(fields: [workoutId], references: [id])
+  workout      Workout        @relation(fields: [workoutId], references: [id])
+}
+
+enum ExerciseType {
+  time
+  reps
+  distance
 }
 
 model WorkoutRound {
   id           String       @id @default(cuid())
   custom       String?
-  type         String
+  type         ExerciseType
   amount       Int
   split        Boolean
   splitBreak   Int
   splitTitle   String[]
   excludeRead  Boolean
-  workoutSetId String?
   exerciseId   String?
+  workoutSetId String
   exercise     Exercise?    @relation(fields: [exerciseId], references: [id])
-  workoutSet   WorkoutSets? @relation(fields: [workoutSetId], references: [id])
+  workoutSet   WorkoutSets  @relation(fields: [workoutSetId], references: [id])
 }
 
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
   userId            String
-  isAdmin           Boolean
-  isEditor          Boolean
   provider          String
   providerAccountId String
   refresh_token     String? @db.Text
@@ -160,15 +168,10 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum Roles {
-  ADMIN
-  EDITOR
-  USER
-}
-
 model User {
   id               String            @id @default(cuid())
-  type             Roles             @default(USER)
+  isAdmin          Boolean
+  isEditor         Boolean
   name             String?
   email            String?           @unique
   emailVerified    DateTime?
