@@ -25,22 +25,29 @@ export const dailySchema = z.object({
 })
 
 const createDailyObject = (input: z.infer<typeof dailySchema>) => {
-  const { workouts, ...baseInput } = input
+  const { workouts, ...daily } = input
 
-  const inputData = {
-    ...baseInput,
+  return {
+    ...daily,
     workouts: {
       create: workouts?.map((workout) => ({
         name: workout?.name,
         numberOfExercises: workout.exercises ? workout?.exercises.length : 0,
         exercises: {
-          create: workout?.exercises,
+          create: workout?.exercises?.map((exercise) => ({
+            max: exercise.max,
+            min: exercise.min,
+            split: exercise.split,
+            exercise: {
+              connect: {
+                id: exercise.exerciseId,
+              },
+            },
+          })),
         },
       })),
     },
   }
-
-  return inputData
 }
 
 export const protectedDailyRouter = createProtectedRouter()
@@ -66,7 +73,10 @@ export const protectedDailyRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.daily.update({
         where: {
-          id: input.id,
+          dailyIdOwner: {
+            id: input.id,
+            userId: ctx.session.user.id,
+          },
         },
         data: createDailyObject(input.data),
       })
@@ -78,7 +88,10 @@ export const protectedDailyRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.daily.update({
         where: {
-          id: input,
+          dailyIdOwner: {
+            id: input,
+            userId: ctx.session.user.id,
+          },
         },
         data: {
           archived: true,
@@ -101,7 +114,7 @@ export const dailyRouter = createRouter()
   })
 
   // Returns todays workout from Daily plan
-  // TODO: Add workout filter to todays plan
+  // TODO: #19 Add workout filter to todays plan
   .query('getTodaysBySlug', {
     input: z.string(),
     async resolve({ input, ctx }) {

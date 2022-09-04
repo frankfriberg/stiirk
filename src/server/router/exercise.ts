@@ -27,11 +27,10 @@ export const exerciseRouter = createRouter()
     },
   })
 
-export const protectedExerciseRouter = createProtectedRouter()
+export const editorExerciseRouter = createProtectedRouter('isEditor')
   .mutation('create', {
     input: exerciseSchema,
     async resolve({ input, ctx }) {
-      if (ctx.session.user.type !== 'ADMIN') return 403
       return await ctx.prisma.exercise.create({
         data: input,
       })
@@ -43,12 +42,29 @@ export const protectedExerciseRouter = createProtectedRouter()
       data: exerciseSchema,
     }),
     async resolve({ input, ctx }) {
-      if (ctx.session.user.type !== 'ADMIN') return 403
       return await ctx.prisma.exercise.update({
         where: {
           id: input.id,
         },
         data: input.data,
+      })
+    },
+  })
+
+export const editorRequestRouter = createProtectedRouter('isEditor')
+  // Returns all requests
+  .query('getAll', {
+    async resolve({ ctx }) {
+      return await ctx.prisma.exerciseRequest.findMany()
+    },
+  })
+  // Archives a single request by ID
+  .mutation('archiveById', {
+    input: z.string(),
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.exerciseRequest.update({
+        where: { id: input },
+        data: { archived: true },
       })
     },
   })
@@ -61,7 +77,7 @@ export const requestRouter = createProtectedRouter()
       return await ctx.prisma.exerciseRequest.create({
         data: {
           ...input,
-          type: 'CREATE',
+          type: 'create',
           user: {
             connect: {
               id: ctx.session.user.id,
@@ -78,7 +94,7 @@ export const requestRouter = createProtectedRouter()
       return await ctx.prisma.exerciseRequest.create({
         data: {
           ...input,
-          type: 'UPDATE',
+          type: 'update',
           user: {
             connect: {
               id: ctx.session.user.id,
@@ -86,13 +102,6 @@ export const requestRouter = createProtectedRouter()
           },
         },
       })
-    },
-  })
-  // Returns all requests
-  .query('getAll', {
-    async resolve({ ctx }) {
-      if (ctx.session.user.type !== 'ADMIN') return 403
-      return await ctx.prisma.exerciseRequest.findMany()
     },
   })
   // Returns a single request by ID
@@ -103,17 +112,6 @@ export const requestRouter = createProtectedRouter()
         where: {
           id: input,
         },
-      })
-    },
-  })
-  // Archives a single request by ID
-  .mutation('archiveById', {
-    input: z.string(),
-    async resolve({ input, ctx }) {
-      if (ctx.session.user.type !== 'ADMIN') return 403
-      return await ctx.prisma.exerciseRequest.update({
-        where: { id: input },
-        data: { archived: true },
       })
     },
   })
