@@ -136,7 +136,8 @@ model WorkoutRound {
 model Account {
   id                String  @id @default(cuid())
   userId            String
-  type              String
+  isAdmin           Boolean
+  isEditor          Boolean
   provider          String
   providerAccountId String
   refresh_token     String? @db.Text
