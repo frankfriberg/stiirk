@@ -1,26 +1,21 @@
+import { Exercise } from '@prisma/client'
 import DailyForm from 'components/DailyForm/DailyForm'
 import ExerciseContext from 'components/ExerciseContext'
-import dbConnect from 'lib/dbConnect'
-import { getAllExercises } from 'modules/exercise/exercise.controller'
-import { HydratedDocument } from 'mongoose'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { Exercise } from 'types/exercise.types'
+import { trpc } from 'utils/trpc'
 
-export const getServerSideProps: GetServerSideProps<{
-  exercises: Array<HydratedDocument<Exercise>>
-}> = async () => {
-  await dbConnect()
-  const data = await getAllExercises()
-  const exercises = await data.json()
+// export const getServerSideProps: GetServerSideProps<{
+//   exercises: Exercise[]
+// }> = async () => {
 
-  return {
-    props: { exercises },
-  }
-}
+//   return {
+//     props: { exercises },
+//   }
+// }
 
-const DailyIndex = ({
-  exercises,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const DailyIndex = () => {
+  const { data } = trpc.useQuery(['exercise.getAll'])
+  const exercises = data ? data : []
   return (
     <ExerciseContext.Provider value={exercises}>
       <div className="p-6 prose bg-slate-100">

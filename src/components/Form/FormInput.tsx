@@ -16,7 +16,7 @@ import { get } from 'lodash'
 export type FormInputProps<TFormValues> = {
   name: Path<TFormValues>
   inline?: boolean
-  subtitle?: String
+  subtitle?: string
   rules?: RegisterOptions
   errors?: Partial<DeepMap<TFormValues, FieldError>>
 } & Omit<InputProps, 'name'>
@@ -72,7 +72,7 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
       </label>
       <ErrorMessage
         errors={errors}
-        name={name as any}
+        name={name}
         render={({ message }) => (
           <FormErrorMessage className="mt-1">{message}</FormErrorMessage>
         )}

@@ -1,9 +1,8 @@
+import { Exercise } from '@prisma/client'
 import { Button } from 'components/Atoms/Button'
-import { HydratedDocument } from 'mongoose'
-import { Exercise } from 'types/exercise.types'
 
 interface Props {
-  filteredExercises: HydratedDocument<Exercise>[]
+  filteredExercises: Exercise[]
   callback: (exercise: Exercise) => void
 }
 
@@ -11,7 +10,7 @@ const ExerciseList = ({ filteredExercises, callback }: Props) => {
   const filtered = filteredExercises.map((exercise) => (
     <div className="flex items-center p-3 bg-white border-b" key={exercise.id}>
       <div className="grow">
-        <h5>{exercise.title}</h5>
+        <h5>{exercise.name}</h5>
       </div>
       <Button
         icon="book-open"

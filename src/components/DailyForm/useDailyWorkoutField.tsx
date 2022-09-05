@@ -1,16 +1,16 @@
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { Daily, DailyWorkout } from 'types/daily.types'
+import { DailySchema, DailyWorkoutSchema } from 'server/router/daily'
 
 const useDailyWorkout = () => {
   const { register, watch } = useFormContext()
 
-  const { fields, append, remove } = useFieldArray<Daily>({
+  const { fields, append, remove } = useFieldArray<DailySchema>({
     name: 'workouts',
   })
 
   const addNewWorkout = () => {
-    const defaultWorkout: DailyWorkout = {
-      title: 'New Workout',
+    const defaultWorkout: DailyWorkoutSchema = {
+      name: '',
       exercises: [],
     }
     append(defaultWorkout)

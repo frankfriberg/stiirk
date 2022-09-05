@@ -1,9 +1,6 @@
-import { HydratedDocument } from 'mongoose'
+import { Exercise } from '@prisma/client'
 import React from 'react'
-import { Exercise } from 'types/exercise.types'
 
-const ExerciseContext = React.createContext<
-  Array<HydratedDocument<Exercise>> | []
->([])
+const ExerciseContext = React.createContext<Array<Exercise> | []>([])
 
 export default ExerciseContext

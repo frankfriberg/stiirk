@@ -1,7 +1,6 @@
 import { Button } from 'components/Atoms/Button'
 import ExerciseModal from 'components/ExerciseModal/ExerciseModal'
 import useModal from 'components/ExerciseModal/useExerciseModal'
-import { Exercise } from 'types/exercise.types'
 import useDailyExerciseField from './useDailyExerciseField'
 import WorkoutExerciseItem from 'components/Molecules/WorkoutExerciseItem'
 import { useMemo, useState } from 'react'
@@ -15,6 +14,7 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { Exercise } from '@prisma/client'
 
 interface Props {
   prefix: number
@@ -50,8 +50,15 @@ const DailyExerciseField = ({ prefix }: Props) => {
     setActiveId(null)
   }
 
-  const addSelectedExercise = (exercise: Exercise) =>
-    addNewExercise(exercise, getValues('settings.maxReps'))
+  const addSelectedExercise = (exercise: Exercise) => {
+    const dailyExercise = {
+      max: getValues('maxReps'),
+      min: 10,
+      split: false,
+      exercise: exercise,
+    }
+    return addNewExercise(dailyExercise)
+  }
 
   return (
     <div>

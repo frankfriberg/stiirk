@@ -3,7 +3,7 @@ import { forwardRef } from 'react'
 
 interface IconProps {
   icon: string
-  size?: 'small' | 'big'
+  size?: 'small' | 'default' | 'big'
   stroke?: number
   className?: string
 }
@@ -17,8 +17,8 @@ const sizes = {
 const Icon = forwardRef<HTMLElement, IconProps>(
   ({ icon, size = 'default', stroke = 1, className, ...props }, ref) => {
     const featherIcon = feather.icons[icon].toSvg({
-      width: 20,
-      heigh: 20,
+      width: sizes[size],
+      heigh: sizes[size],
       'stroke-width': stroke,
     })
 

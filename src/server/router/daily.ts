@@ -1,12 +1,15 @@
 import { createRouter } from './context'
 import { z } from 'zod'
 import { createProtectedRouter } from './protected-router'
+import { exerciseSchema } from './exercise'
 
 export const dailyExerciseSchema = z.object({
   max: z.number(),
   min: z.number(),
   split: z.boolean(),
-  exerciseId: z.string(),
+  exercise: exerciseSchema.extend({
+    id: z.string(),
+  }),
 })
 
 export const dailyWorkoutSchema = z.object({
@@ -24,6 +27,10 @@ export const dailySchema = z.object({
   workouts: z.array(dailyWorkoutSchema).optional(),
 })
 
+export type DailySchema = z.infer<typeof dailySchema>
+export type DailyExerciseSchema = z.infer<typeof dailyExerciseSchema>
+export type DailyWorkoutSchema = z.infer<typeof dailyWorkoutSchema>
+
 const createDailyObject = (input: z.infer<typeof dailySchema>) => {
   const { workouts, ...daily } = input
 
@@ -40,7 +47,7 @@ const createDailyObject = (input: z.infer<typeof dailySchema>) => {
             split: exercise.split,
             exercise: {
               connect: {
-                id: exercise.exerciseId,
+                id: exercise.exercise.id,
               },
             },
           })),

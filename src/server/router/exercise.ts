@@ -10,13 +10,15 @@ export const exerciseSchema = z.object({
   secondary: z.array(z.string()),
 })
 
+export type IExerciseSchema = z.infer<typeof exerciseSchema>
+
 export const exerciseRouter = createRouter()
-  .query('get-all', {
+  .query('getAll', {
     async resolve({ ctx }) {
       return await ctx.prisma.exercise.findMany()
     },
   })
-  .query('get-by-id', {
+  .query('getById', {
     input: z.string(),
     async resolve({ input, ctx }) {
       return await ctx.prisma.exercise.findUnique({
@@ -36,7 +38,7 @@ export const editorExerciseRouter = createProtectedRouter('isEditor')
       })
     },
   })
-  .mutation('update-by-id', {
+  .mutation('updateById', {
     input: z.object({
       id: z.string(),
       data: exerciseSchema,

@@ -1,7 +1,7 @@
+import { Exercise } from '@prisma/client'
 import { Button } from 'components/Atoms/Button'
 import ExerciseContext from 'components/ExerciseContext'
 import React, { FunctionComponent, useContext, useState } from 'react'
-import { Exercise } from 'types/exercise.types'
 import ExerciseList from './ExerciseList'
 
 interface ModalProps {
@@ -23,7 +23,7 @@ const ExerciseModal: FunctionComponent<ModalProps> = ({
   }
 
   const filteredExercises = exercises.filter((exercise) => {
-    return exercise.title.toLowerCase().includes(search.toLowerCase())
+    return exercise.name.toLowerCase().includes(search.toLowerCase())
   })
 
   const modal = (

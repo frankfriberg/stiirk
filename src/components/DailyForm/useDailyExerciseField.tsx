@@ -1,30 +1,24 @@
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { Daily } from 'types/daily.types'
-import { Exercise } from 'types/exercise.types'
+import { DailyExerciseSchema, DailySchema } from 'server/router/daily'
 
 const useDailyExerciseField = (prefix: number) => {
-  const { register, control, getValues } = useFormContext<Daily>()
+  const { register, control, getValues } = useFormContext<DailySchema>()
 
   const { fields, append, remove, move } = useFieldArray({
     control,
     name: `workouts.${prefix}.exercises`,
   })
 
-  const addNewExercise = (exercise: Exercise, max: number) => {
-    append({
-      exercise: exercise,
-      max: max,
-      min: 10,
-      leftright: false,
-    })
+  const addNewExercise = (exercise: DailyExerciseSchema) => {
+    return append(exercise)
   }
 
   const removeExercise = (exerciseIndex: number) => () => {
-    remove(exerciseIndex)
+    return remove(exerciseIndex)
   }
 
   const moveExercise = (start: number, end: number) => {
-    move(start, end)
+    return move(start, end)
   }
 
   return {

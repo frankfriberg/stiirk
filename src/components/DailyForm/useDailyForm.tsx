@@ -1,28 +1,25 @@
-import { HydratedDocument } from 'mongoose'
 import { useRouter } from 'next/router'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Daily, DailyWorkout } from 'types/daily.types'
+import { DailySchema } from 'server/router/daily'
 import { DailyFormProps } from './DailyForm'
 
-const defaultDaily: Daily = {
+const defaultDaily: DailySchema = {
   slug: 'New Workout',
-  startDate: new Date().toISOString().slice(0, 10),
-  settings: {
-    maxReps: 30,
-    startReps: 35,
-    maxSets: 3,
-    repRatio: [40, 35, 25],
-  },
+  startDate: new Date(),
+  maxReps: 30,
+  startReps: 35,
+  maxSets: 3,
+  repRatio: [40, 35, 25],
   workouts: [],
 }
 
 const useDailyForm = ({ method, dailyFill }: DailyFormProps) => {
   const router = useRouter()
-  const methods = useForm<Daily>({
+  const methods = useForm<DailySchema>({
     defaultValues: !dailyFill ? defaultDaily : dailyFill,
   })
 
-  const handleSubmit: SubmitHandler<Daily> = (values, event) => {
+  const handleSubmit: SubmitHandler<DailySchema> = (values, event) => {
     event?.preventDefault()
     const url = method == 'PUT' ? `api/daily/${dailyFill?.id}` : 'api/daily'
     const redirect = `/daily/${values.slug}`

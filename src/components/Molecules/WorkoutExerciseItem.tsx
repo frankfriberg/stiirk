@@ -1,15 +1,15 @@
 import { useSortable } from '@dnd-kit/sortable'
-import { DailyExercise } from 'types/daily.types'
 import { CSS } from '@dnd-kit/utilities'
 import { Button } from 'components/Atoms/Button'
 import Icon from 'components/Atoms/Icon'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Input } from 'components/Atoms/Input'
+import { DailyExerciseSchema } from 'server/router/daily'
 
 interface ItemProp {
   id: string
-  data: DailyExercise
+  data: DailyExerciseSchema
   callback: () => void
   prefix: string
 }
@@ -39,7 +39,7 @@ const WorkoutExerciseItem = ({ id, data, callback, prefix }: ItemProp) => {
       {...attributes}
       className="grid grid-cols-10 gap-2 px-4 py-2 bg-white border-t border-x first:rounded-t-md last:rounded-b-md last:border-b only:rounded-md only:border"
     >
-      <span className="col-span-5 text-neutral-500">{data.exercise.title}</span>
+      <span className="col-span-5 text-neutral-500">{data.exercise.name}</span>
       <Input
         className="col-span-1"
         type="number"

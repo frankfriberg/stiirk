@@ -33,7 +33,9 @@ const workoutSchema = z.object({
   sets: z.array(workoutSetSchema),
 })
 
-const createWorkoutObject = (input: z.infer<typeof workoutSchema>) => {
+export type IWorkoutSchema = z.infer<typeof workoutSchema>
+
+const createWorkoutObject = (input: IWorkoutSchema) => {
   const { sets, ...workout } = input
 
   return {

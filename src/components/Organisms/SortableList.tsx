@@ -5,7 +5,6 @@ import {
   useSensors,
   TouchSensor,
   DragEndEvent,
-  DragOverlay,
   DragStartEvent,
 } from '@dnd-kit/core'
 import { ComponentType, ElementType, ReactNode, useMemo, useState } from 'react'
