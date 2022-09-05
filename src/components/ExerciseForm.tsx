@@ -1,53 +1,33 @@
+import { FormRequestHandler } from 'lib/SubmitHandler'
+import { HydratedDocument } from 'mongoose'
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler, SubmitErrorHandler } from 'react-hook-form'
-import { IExercise } from 'types/exercise.types'
-
-type Inputs = {
-  title: string
-  slug: string
-  force: string
-}
+import { Exercise } from 'types/exercise.types'
 
 type Props = {
-  put?: boolean
-  exerciseFill?: IExercise
+  method: 'POST' | 'PUT'
+  exerciseFill?: HydratedDocument<Exercise>
 }
 
-function ExerciseForm({ put, exerciseFill }: Props) {
+function ExerciseForm({ method, exerciseFill }: Props) {
   const router = useRouter()
-  const { register, handleSubmit, formState } = useForm<Inputs>({
+  const { register, handleSubmit, formState } = useForm<Exercise>({
     defaultValues: exerciseFill,
   })
   const { isSubmitting } = formState
 
-  const onSubmit: SubmitHandler<Inputs> = (data, event) => {
+  const onSubmit: SubmitHandler<Exercise> = (data, event) => {
     event?.preventDefault()
-    const url = put ? `/api/exercise/${exerciseFill!.id}` : '/api/exercise/'
-    const method = put ? 'PUT' : 'POST'
+    const url =
+      method == 'PUT' ? `/api/exercise/${exerciseFill!.id}` : '/api/exercise/'
+    const redirect = `/exercises/${data.slug}`
 
-    fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(async (response) => {
-        const data = await response.json()
-
-        if (!response.ok) {
-          const error = (data && data.message) || response.statusText
-          return Promise.reject(error)
-        }
-
-        router.push(`/exercises/${data.slug}`)
-      })
-      .catch((error) => {
-        console.error('There was an error!', error)
-      })
+    return FormRequestHandler(data, url, method, redirect).catch((error) =>
+      console.error(error)
+    )
   }
 
-  const onError: SubmitErrorHandler<Inputs> = (errors, e) => {
+  const onError: SubmitErrorHandler<Exercise> = (errors, e) => {
     console.log(errors)
   }
 
@@ -57,7 +37,7 @@ function ExerciseForm({ put, exerciseFill }: Props) {
         <p>Title</p>
         <input type="text" {...register('title')} />
       </label>
-      <label htmlFor="title">
+      <label htmlFor="slug">
         <p>Slug</p>
         <input type="text" {...register('slug')} />
       </label>

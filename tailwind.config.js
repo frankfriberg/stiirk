@@ -1,10 +1,5 @@
 module.exports = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+  content: ['./src/pages/**/*.tsx', './src/components/**/*.tsx'],
+  theme: {},
+  plugins: [require('@tailwindcss/typography')],
 }

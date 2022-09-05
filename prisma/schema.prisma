@@ -1,0 +1,194 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
+  // Further reading: 
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
+}
+
+// Daily Workouts
+model Daily {
+  id        String         @id @default(cuid())
+  archived  Boolean        @default(false)
+  slug      String         @unique
+  startDate DateTime
+  maxReps   Int
+  startReps Int
+  maxSets   Int
+  repRatio  Int[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
+  workouts  DailyWorkout[]
+
+  @@unique(fields: [id, userId], name: "dailyIdOwner")
+}
+
+model DailyWorkout {
+  id                String          @id @default(cuid())
+  name              String
+  numberOfExercises Int
+  dailyId           String
+  exercises         DailyExercise[]
+  daily             Daily           @relation(fields: [dailyId], references: [id])
+}
+
+model DailyExercise {
+  id             String       @id @default(cuid())
+  max            Int
+  min            Int
+  split          Boolean
+  exerciseId     String
+  dailyWorkoutId String
+  exercise       Exercise     @relation(fields: [exerciseId], references: [id])
+  dailyWorkouts  DailyWorkout @relation(fields: [dailyWorkoutId], references: [id])
+}
+
+// Exercises
+model Exercise {
+  id              String            @id @default(cuid())
+  name            String
+  slug            String            @unique
+  alias           String[]
+  primary         String[]
+  secondary       String[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  dailyExercises  DailyExercise[]
+  workoutRound    WorkoutRound[]
+  ExerciseRequest ExerciseRequest[]
+}
+
+enum Request {
+  create
+  update
+}
+
+model ExerciseRequest {
+  id         String    @id @default(cuid())
+  archived   Boolean   @default(false)
+  type       Request
+  name       String
+  slug       String    @unique
+  alias      String[]
+  primary    String[]
+  secondary  String[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  userId     String
+  exerciseId String?
+  user       User      @relation(fields: [userId], references: [id])
+  exercise   Exercise? @relation(fields: [exerciseId], references: [id])
+}
+
+// Workouts
+model Workout {
+  id                String        @id @default(cuid())
+  archived          Boolean       @default(false)
+  public            Boolean       @default(true)
+  slug              String
+  name              String
+  timerCountdown    Boolean
+  timerCountFrom    Int
+  timerReadExercise Boolean
+  setRest           Int
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  userId            String
+  user              User          @relation(fields: [userId], references: [id])
+  sets              WorkoutSets[]
+
+  @@unique(fields: [id, userId], name: "workoutIdOwner")
+}
+
+model WorkoutSets {
+  id           String         @id @default(cuid())
+  name         String
+  exerciseRest Int
+  tabata       Boolean
+  iterations   Int
+  workoutId    String
+  rounds       WorkoutRound[]
+  workout      Workout        @relation(fields: [workoutId], references: [id])
+}
+
+enum ExerciseType {
+  time
+  reps
+  distance
+}
+
+model WorkoutRound {
+  id           String       @id @default(cuid())
+  custom       String?
+  type         ExerciseType
+  amount       Int
+  split        Boolean
+  splitBreak   Int
+  splitTitle   String[]
+  excludeRead  Boolean
+  exerciseId   String?
+  workoutSetId String
+  exercise     Exercise?    @relation(fields: [exerciseId], references: [id])
+  workoutSet   WorkoutSets  @relation(fields: [workoutSetId], references: [id])
+}
+
+// Necessary for Next auth
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id               String            @id @default(cuid())
+  isAdmin          Boolean
+  isEditor         Boolean
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  image            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  accounts         Account[]
+  sessions         Session[]
+  exerciseRequests ExerciseRequest[]
+  workouts         Workout[]
+  daily            Daily[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

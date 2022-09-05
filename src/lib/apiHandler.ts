@@ -13,7 +13,7 @@ export declare type StiirkApiHandler = (
   params: StiirkApiParams
 ) => unknown | Promise<unknown>
 
-export const apiReturn = (code: number, data: any) =>
+export const ApiReturn = (code: number, data: any) =>
   new Response(JSON.stringify(data), {
     status: code,
     headers: { 'Content-Type': 'application/json' },
