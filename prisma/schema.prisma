@@ -47,6 +47,7 @@ model DailyExercise {
   max            Int
   min            Int
   split          Boolean
+  type           ExerciseType @default(reps)
   exerciseId     String
   dailyWorkoutId String
   exercise       Exercise     @relation(fields: [exerciseId], references: [id])
@@ -170,8 +171,8 @@ model Session {
 
 model User {
   id               String            @id @default(cuid())
-  isAdmin          Boolean
-  isEditor         Boolean
+  isAdmin          Boolean           @default(false)
+  isEditor         Boolean           @default(false)
   name             String?
   email            String?           @unique
   emailVerified    DateTime?

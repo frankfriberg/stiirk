@@ -2,11 +2,13 @@ import { createRouter } from './context'
 import { z } from 'zod'
 import { createProtectedRouter } from './protected-router'
 import { exerciseSchema } from './exercise'
+import { ExerciseType } from '@prisma/client'
 
 export const dailyExerciseSchema = z.object({
   max: z.number(),
   min: z.number(),
   split: z.boolean(),
+  type: z.nativeEnum(ExerciseType),
   exercise: exerciseSchema.extend({
     id: z.string(),
   }),
