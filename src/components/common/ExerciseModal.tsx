@@ -1,8 +1,9 @@
 import { Exercise } from '@prisma/client'
-import { Button } from 'components/Atoms/Button'
-import ExerciseContext from 'components/ExerciseContext'
+import ExerciseList from 'components/exercise/ExerciseList'
 import React, { FunctionComponent, useContext, useState } from 'react'
-import ExerciseList from './ExerciseList'
+import ExerciseContext from 'context/exerciseContext'
+import Button from 'components/common/Button'
+import { X } from 'react-feather'
 
 interface ModalProps {
   isShown: boolean
@@ -31,7 +32,7 @@ const ExerciseModal: FunctionComponent<ModalProps> = ({
       <div className="sticky top-0">
         <div className="flex items-center justify-between w-full px-3 py-2 border-b bg-slate-100">
           <h3 className="mt-3">Add Exercise</h3>
-          <Button icon="x" size="small" callback={hide} />
+          <Button icon={X} size="small" callback={hide} />
         </div>
         <input
           className="w-full p-3 border outline-none border-neutral-500 focus:ring-1 focus:border-black ring-black"

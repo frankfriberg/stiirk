@@ -1,10 +1,10 @@
 import { Daily } from '@prisma/client'
-import { Button } from 'components/Atoms/Button'
-import { FormInput } from 'components/Form/FormInput'
+import Button from 'components/common/Button'
+import FormInput from 'components/common/form/FormInput'
 import React from 'react'
 import { FormProvider } from 'react-hook-form'
-import DailyWorkoutField from './DailyWorkoutField'
-import useDailyForm from './useDailyForm'
+import DailyWorkoutField from 'components/daily/DailyWorkoutField'
+import useDailyForm from 'hooks/useDailyForm'
 
 export type DailyFormProps = {
   method: 'POST' | 'PUT'

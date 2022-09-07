@@ -1,7 +1,8 @@
-import { Button } from 'components/Atoms/Button'
-import { FormInput } from 'components/Form/FormInput'
-import DailyExerciseField from './DailyExerciseField'
-import useDailyWorkout from './useDailyWorkoutField'
+import Button from 'components/common/Button'
+import useDailyWorkout from 'src/hooks/useDailyWorkoutField'
+import FormInput from 'components/common/form/FormInput'
+import DailyExerciseField from 'components/daily/DailyExerciseField'
+import { Plus, Trash } from 'react-feather'
 
 const DailyWorkoutField = () => {
   const { watch, fields, addNewWorkout, removeWorkout } = useDailyWorkout()
@@ -20,7 +21,7 @@ const DailyWorkoutField = () => {
             </h3>
             <Button
               size="small"
-              icon="trash"
+              icon={Trash}
               style="red"
               callback={removeWorkout(index)}
             />
@@ -38,7 +39,7 @@ const DailyWorkoutField = () => {
         callback={addNewWorkout}
         className="block mx-auto"
         style="black"
-        icon="plus"
+        icon={Plus}
         label="Add Workout"
       />
     </section>

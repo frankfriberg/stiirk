@@ -1,5 +1,5 @@
+import { DailyExerciseSchema, DailySchema } from 'lib/validation/daily'
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { DailyExerciseSchema, DailySchema } from 'server/router/daily'
 
 const useDailyExerciseField = (prefix: number) => {
   const { register, control, getValues } = useFormContext<DailySchema>()

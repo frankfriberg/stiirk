@@ -1,11 +1,12 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Button } from 'components/Atoms/Button'
-import Icon from 'components/Atoms/Icon'
+import Button from 'components/common/Button'
+import Icon from 'components/common/Icon'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
-import { Input } from 'components/Atoms/Input'
-import { DailyExerciseSchema } from 'server/router/daily'
+import Input from 'components/common/Input'
+import { DailyExerciseSchema } from 'lib/validation/daily'
+import { Menu, Trash } from 'react-feather'
 
 interface ItemProp {
   id: string
@@ -59,14 +60,14 @@ const WorkoutExerciseItem = ({ id, data, callback, prefix }: ItemProp) => {
         {...register(`${prefix}.leftright`)}
       />
       <Button
-        icon="trash"
+        icon={Trash}
         size="small"
         style="red"
         className="col-auto place-self-center"
         callback={callback}
       />
       <Icon
-        icon="menu"
+        icon={Menu}
         className="place-self-center"
         ref={setActivatorNodeRef}
         {...listeners}

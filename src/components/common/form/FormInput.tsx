@@ -1,6 +1,5 @@
 import React from 'react'
 import classNames from 'classnames'
-
 import {
   RegisterOptions,
   DeepMap,
@@ -9,11 +8,11 @@ import {
   useFormContext,
 } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
-import { FormErrorMessage } from './FormErrorMessage'
-import { Input, InputProps } from '../Atoms/Input'
 import { get } from 'lodash'
+import Input, { InputProps } from 'components/common/Input'
+import { FormErrorMessage } from 'components/common/FormErrorMessage'
 
-export type FormInputProps<TFormValues> = {
+type FormInputProps<TFormValues> = {
   name: Path<TFormValues>
   inline?: boolean
   subtitle?: string
@@ -21,7 +20,7 @@ export type FormInputProps<TFormValues> = {
   errors?: Partial<DeepMap<TFormValues, FieldError>>
 } & Omit<InputProps, 'name'>
 
-export const FormInput = <TFormValues extends Record<string, unknown>>({
+const FormInput = <TFormValues extends Record<string, unknown>>({
   name,
   inline = false,
   subtitle,
@@ -80,3 +79,5 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
     </div>
   )
 }
+
+export default FormInput

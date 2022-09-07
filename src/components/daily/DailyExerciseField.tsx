@@ -1,8 +1,7 @@
-import { Button } from 'components/Atoms/Button'
-import ExerciseModal from 'components/ExerciseModal/ExerciseModal'
-import useModal from 'components/ExerciseModal/useExerciseModal'
-import useDailyExerciseField from './useDailyExerciseField'
-import WorkoutExerciseItem from 'components/Molecules/WorkoutExerciseItem'
+import Button from 'components/common/Button'
+import ExerciseModal from 'components/common/ExerciseModal'
+import useDailyExerciseField from 'hooks/useDailyExerciseField'
+import DailyExerciseItem from 'components/daily/DailyExerciseItem'
 import { useMemo, useState } from 'react'
 import {
   DndContext,
@@ -14,7 +13,9 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { Exercise } from '@prisma/client'
+import { Exercise, ExerciseType } from '@prisma/client'
+import useModal from 'hooks/useExerciseModal'
+import { PlusCircle } from 'react-feather'
 
 interface Props {
   prefix: number
@@ -54,6 +55,7 @@ const DailyExerciseField = ({ prefix }: Props) => {
     const dailyExercise = {
       max: getValues('maxReps'),
       min: 10,
+      type: ExerciseType.reps,
       split: false,
       exercise: exercise,
     }
@@ -81,7 +83,7 @@ const DailyExerciseField = ({ prefix }: Props) => {
             strategy={verticalListSortingStrategy}
           >
             {fields.map((field, index) => (
-              <WorkoutExerciseItem
+              <DailyExerciseItem
                 key={field.id}
                 id={field.id}
                 data={field}
@@ -97,7 +99,7 @@ const DailyExerciseField = ({ prefix }: Props) => {
         callback={toggleModal}
         className="block mx-auto mt-4"
         label="Add Exercise"
-        icon="plus-circle"
+        icon={PlusCircle}
       />
       <ExerciseModal
         callback={addSelectedExercise}

@@ -1,7 +1,7 @@
+import { DailyFormProps } from 'components/daily/DailyForm'
+import { DailySchema } from 'lib/validation/daily'
 import { useRouter } from 'next/router'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { DailySchema } from 'server/router/daily'
-import { DailyFormProps } from './DailyForm'
 
 const defaultDaily: DailySchema = {
   slug: 'New Workout',

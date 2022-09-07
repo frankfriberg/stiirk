@@ -1,5 +1,5 @@
+import { DailySchema, DailyWorkoutSchema } from 'lib/validation/daily'
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { DailySchema, DailyWorkoutSchema } from 'server/router/daily'
 
 const useDailyWorkout = () => {
   const { register, watch } = useFormContext()

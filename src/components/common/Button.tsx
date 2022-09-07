@@ -1,10 +1,11 @@
-import React from 'react'
-import feather from 'feather-icons'
+import React, { forwardRef, ForwardRefRenderFunction } from 'react'
 import classNames from 'classnames'
+import { Icon as IconType } from 'react-feather'
+import Icon from './Icon'
 
 interface ButtonProps {
   label?: string
-  icon?: string
+  icon?: IconType
   shape?: 'circle' | 'rounded'
   style?: 'white' | 'black' | 'red' | 'blue' | 'green'
   size?: 'small' | 'normal' | 'big'
@@ -46,9 +47,9 @@ const styles = {
   },
 }
 
-export const Button = ({
+const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = ({
   label = '',
-  icon,
+  icon: FeatherIcon,
   shape = 'circle',
   style = 'white',
   size = 'normal',
@@ -56,15 +57,6 @@ export const Button = ({
   type = 'button',
   callback,
 }: ButtonProps): React.ReactElement => {
-  const featherIcon = icon
-    ? feather.icons[icon].toSvg({
-        height: styles[size].size,
-        width: styles[size].size,
-        'stroke-width': styles[size].stroke,
-        class: classNames(iconStyles[style], label && 'mr-1'),
-      })
-    : ''
-
   return (
     <button
       type={type}
@@ -76,7 +68,11 @@ export const Button = ({
         styles[size].styling,
         'border flex items-center'
       )}
-      dangerouslySetInnerHTML={{ __html: `${featherIcon} ${label}` }}
-    ></button>
+    >
+      {FeatherIcon && <Icon className={iconStyles[style]} icon={FeatherIcon} />}
+      ${label}
+    </button>
   )
 }
+
+export default forwardRef(Button)

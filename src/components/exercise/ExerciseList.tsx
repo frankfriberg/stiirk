@@ -1,5 +1,6 @@
 import { Exercise } from '@prisma/client'
-import { Button } from 'components/Atoms/Button'
+import Button from 'components/common/Button'
+import { BookOpen, MessageCircle, Plus } from 'react-feather'
 
 interface Props {
   filteredExercises: Exercise[]
@@ -13,13 +14,13 @@ const ExerciseList = ({ filteredExercises, callback }: Props) => {
         <h5>{exercise.name}</h5>
       </div>
       <Button
-        icon="book-open"
+        icon={BookOpen}
         size="small"
         className="ml-3"
         callback={() => window.alert(exercise)}
       />
       <Button
-        icon="plus"
+        icon={Plus}
         style="black"
         size="small"
         className="ml-3"
@@ -33,7 +34,7 @@ const ExerciseList = ({ filteredExercises, callback }: Props) => {
       <h4>No exercises found, want to add one?</h4>
       <Button
         className="block mx-auto mt-5"
-        icon="message-circle"
+        icon={MessageCircle}
         label="Request Exercise"
         callback={() => window.alert('Add')}
       />
