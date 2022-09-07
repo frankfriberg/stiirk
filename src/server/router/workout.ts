@@ -1,41 +1,9 @@
+import { workoutSchema, WorkoutSchema } from 'lib/validation/workout'
 import { z } from 'zod'
 import { createRouter } from './context'
 import { createProtectedRouter } from './protected-router'
-import { ExerciseType } from '@prisma/client'
 
-const workoutRoundSchema = z.object({
-  custom: z.string().optional(),
-  type: z.nativeEnum(ExerciseType),
-  amount: z.number(),
-  split: z.boolean(),
-  splitBreak: z.number(),
-  splitTitle: z.array(z.string()).max(2),
-  excludeRead: z.boolean(),
-  exerciseId: z.string().optional(),
-})
-
-const workoutSetSchema = z.object({
-  name: z.string(),
-  exerciseRest: z.number(),
-  tabata: z.boolean(),
-  iterations: z.number(),
-  rounds: z.array(workoutRoundSchema),
-})
-
-const workoutSchema = z.object({
-  public: z.boolean(),
-  name: z.string(),
-  slug: z.string(),
-  timerCountdown: z.boolean(),
-  timerCountFrom: z.number(),
-  timerReadExercise: z.boolean(),
-  setRest: z.number(),
-  sets: z.array(workoutSetSchema),
-})
-
-export type IWorkoutSchema = z.infer<typeof workoutSchema>
-
-const createWorkoutObject = (input: IWorkoutSchema) => {
+const createWorkoutObject = (input: WorkoutSchema) => {
   const { sets, ...workout } = input
 
   return {

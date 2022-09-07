@@ -1,39 +1,9 @@
 import { createRouter } from './context'
 import { z } from 'zod'
 import { createProtectedRouter } from './protected-router'
-import { exerciseSchema } from './exercise'
-import { ExerciseType } from '@prisma/client'
+import { dailySchema, DailySchema } from 'lib/validation/daily'
 
-export const dailyExerciseSchema = z.object({
-  max: z.number(),
-  min: z.number(),
-  split: z.boolean(),
-  type: z.nativeEnum(ExerciseType),
-  exercise: exerciseSchema.extend({
-    id: z.string(),
-  }),
-})
-
-export const dailyWorkoutSchema = z.object({
-  name: z.string(),
-  exercises: z.array(dailyExerciseSchema).optional(),
-})
-
-export const dailySchema = z.object({
-  slug: z.string(),
-  startDate: z.date(),
-  maxReps: z.number(),
-  startReps: z.number(),
-  maxSets: z.number(),
-  repRatio: z.array(z.number()),
-  workouts: z.array(dailyWorkoutSchema).optional(),
-})
-
-export type DailySchema = z.infer<typeof dailySchema>
-export type DailyExerciseSchema = z.infer<typeof dailyExerciseSchema>
-export type DailyWorkoutSchema = z.infer<typeof dailyWorkoutSchema>
-
-const createDailyObject = (input: z.infer<typeof dailySchema>) => {
+const createDailyObject = (input: DailySchema) => {
   const { workouts, ...daily } = input
 
   return {

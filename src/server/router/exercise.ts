@@ -1,16 +1,7 @@
+import { exerciseSchema } from 'lib/validation/exercise'
 import { z } from 'zod'
 import { createRouter } from './context'
 import { createProtectedRouter } from './protected-router'
-
-export const exerciseSchema = z.object({
-  name: z.string(),
-  slug: z.string(),
-  alias: z.array(z.string()),
-  primary: z.array(z.string()),
-  secondary: z.array(z.string()),
-})
-
-export type IExerciseSchema = z.infer<typeof exerciseSchema>
 
 export const exerciseRouter = createRouter()
   .query('getAll', {
