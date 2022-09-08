@@ -2,12 +2,15 @@
   "name": "stiirk-next",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "ts-node ./lib/dbSeed.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.0.5",
