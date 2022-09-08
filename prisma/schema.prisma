@@ -62,6 +62,7 @@ model Exercise {
   alias           String[]
   primary         String[]
   secondary       String[]
+  group           String[]
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   dailyExercises  DailyExercise[]
