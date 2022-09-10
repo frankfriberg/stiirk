@@ -1,7 +1,10 @@
+import { selectedInput } from 'lib/selectedInput'
 import { workoutSchema, WorkoutSchema } from 'lib/validation/workout'
 import { z } from 'zod'
 import { createRouter } from './context'
 import { createProtectedRouter } from './protected-router'
+
+const selectWorkoutInput = z.array(workoutSchema.keyof()).optional()
 
 const createWorkoutObject = (input: WorkoutSchema) => {
   const { sets, ...workout } = input
@@ -50,6 +53,18 @@ export const protectedWorkoutRouter = createProtectedRouter()
       })
     },
   })
+  // Get list of own workouts
+  .query('getAllOwn', {
+    input: selectWorkoutInput,
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.workout.findMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        select: selectedInput(input),
+      })
+    },
+  })
   // Updates workout by ID
   .mutation('updateById', {
     input: z.object({
@@ -89,11 +104,13 @@ export const protectedWorkoutRouter = createProtectedRouter()
 export const workoutRouter = createRouter()
   // Lists all viewable workouts
   .query('getAll', {
-    async resolve({ ctx }) {
+    input: selectWorkoutInput,
+    async resolve({ input, ctx }) {
       return await ctx.prisma.workout.findMany({
         where: {
           public: true,
         },
+        select: selectedInput(input),
       })
     },
   })

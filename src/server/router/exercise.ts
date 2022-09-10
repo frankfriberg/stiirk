@@ -1,12 +1,18 @@
+import { selectedInput } from 'lib/selectedInput'
 import { exerciseSchema } from 'lib/validation/exercise'
 import { z } from 'zod'
 import { createRouter } from './context'
 import { createProtectedRouter } from './protected-router'
 
+const selectExerciseInput = z.array(exerciseSchema.keyof()).optional()
+
 export const exerciseRouter = createRouter()
   .query('getAll', {
-    async resolve({ ctx }) {
-      return await ctx.prisma.exercise.findMany()
+    input: selectExerciseInput,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.exercise.findMany({
+        select: selectedInput(input),
+      })
     },
   })
   .query('getById', {
@@ -47,8 +53,11 @@ export const editorExerciseRouter = createProtectedRouter('isEditor')
 export const editorRequestRouter = createProtectedRouter('isEditor')
   // Returns all requests
   .query('getAll', {
-    async resolve({ ctx }) {
-      return await ctx.prisma.exerciseRequest.findMany()
+    input: selectExerciseInput,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.exerciseRequest.findMany({
+        select: selectedInput(input),
+      })
     },
   })
   // Archives a single request by ID
