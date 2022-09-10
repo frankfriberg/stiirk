@@ -15,14 +15,14 @@
     "jsx": "preserve",
     "incremental": true,
     "noUncheckedIndexedAccess": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "components/*": ["src/components/*"],
-      "server/*": ["src/server/*"],
-      "types/*": ["src/types/*"],
-      "styles/*": ["src/styles/*"],
-      "hooks/*": ["src/hooks/*"],
-      "context/*": ["src/context/*"],
+      "components/*": ["components/*"],
+      "server/*": ["server/*"],
+      "types/*": ["types/*"],
+      "styles/*": ["styles/*"],
+      "hooks/*": ["hooks/*"],
+      "context/*": ["context/*"],
       "lib/*": ["lib/*"]
     }
   },
