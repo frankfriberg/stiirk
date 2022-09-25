@@ -2,8 +2,10 @@ import { DailyFormProps } from 'components/daily/DailyForm'
 import { DailySchema } from 'lib/validation/daily'
 import { useRouter } from 'next/router'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { trpc } from 'utils/trpc'
 
 const defaultDaily: DailySchema = {
+  id: '0',
   slug: 'New Workout',
   startDate: new Date(),
   maxReps: 30,
@@ -13,41 +15,21 @@ const defaultDaily: DailySchema = {
   workouts: [],
 }
 
-const useDailyForm = ({ method, dailyFill }: DailyFormProps) => {
+const useDailyForm = ({ put, dailyFill }: DailyFormProps) => {
   const router = useRouter()
   const methods = useForm<DailySchema>({
     defaultValues: !dailyFill ? defaultDaily : dailyFill,
   })
+  const mutation = put
+    ? trpc.useMutation(['daily.u.create'])
+    : trpc.useMutation(['daily.u.updateById'])
 
-  const handleSubmit: SubmitHandler<DailySchema> = (values, event) => {
+  const handleSubmit: SubmitHandler<DailySchema> = (data, event) => {
     event?.preventDefault()
-    const url = method == 'PUT' ? `api/daily/${dailyFill?.id}` : 'api/daily'
-    const redirect = `/daily/${values.slug}`
-    values.slug = values.slug.toLowerCase().replace(/[^\w]/gi, '')
 
-    fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    })
-      .then(async (response) => {
-        const data = await response.json()
+    mutation.mutate(data)
 
-        if (!response.ok) {
-          throw data
-        }
-
-        if (method == 'PUT') {
-          return router.push(redirect)
-        }
-        console.log(response)
-        return data
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    if (mutation.isError) return mutation.error.message
   }
 
   return {

@@ -18,6 +18,7 @@ export const dailyWorkoutSchema = z.object({
 })
 
 export const dailySchema = z.object({
+  id: z.string(),
   slug: z.string().min(1),
   startDate: z.date(),
   maxReps: z.number().min(1),

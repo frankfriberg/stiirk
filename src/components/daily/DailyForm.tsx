@@ -7,12 +7,12 @@ import DailyWorkoutField from 'components/daily/DailyWorkoutField'
 import useDailyForm from 'hooks/useDailyForm'
 
 export type DailyFormProps = {
-  method: 'POST' | 'PUT'
+  put?: boolean
   dailyFill?: Daily
 }
 
-const DailyForm = ({ method, dailyFill }: DailyFormProps) => {
-  const { handleSubmit, methods } = useDailyForm({ method, dailyFill })
+const DailyForm = ({ put = false, dailyFill }: DailyFormProps) => {
+  const { handleSubmit, methods } = useDailyForm({ put, dailyFill })
   const watchSlug = methods.watch('slug').toLowerCase().replace(/[^\w]/gi, '')
   const maxSetsWatch = methods.watch('maxSets')
 

@@ -36,7 +36,7 @@ const createWorkoutObject = (input: WorkoutSchema) => {
   }
 }
 
-export const protectedWorkoutRouter = createProtectedRouter()
+export const userWorkoutRouter = createProtectedRouter()
   // Creates a new Workout
   .mutation('create', {
     input: workoutSchema,

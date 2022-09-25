@@ -29,7 +29,7 @@ const createDailyObject = (input: DailySchema) => {
   }
 }
 
-export const protectedDailyRouter = createProtectedRouter()
+export const userDailyRouter = createProtectedRouter()
   // Create a new Daily plan
   .mutation('create', {
     input: dailySchema,
@@ -48,7 +48,7 @@ export const protectedDailyRouter = createProtectedRouter()
   })
   // Updates Daily by ID
   .mutation('updateById', {
-    input: z.object({ id: z.string(), data: dailySchema }),
+    input: dailySchema,
     async resolve({ ctx, input }) {
       return await ctx.prisma.daily.update({
         where: {
@@ -57,7 +57,7 @@ export const protectedDailyRouter = createProtectedRouter()
             userId: ctx.session.user.id,
           },
         },
-        data: createDailyObject(input.data),
+        data: createDailyObject(input),
       })
     },
   })
