@@ -70,7 +70,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = ({
       )}
     >
       {FeatherIcon && <Icon className={iconStyles[style]} icon={FeatherIcon} />}
-      ${label}
+      {label}
     </button>
   )
 }

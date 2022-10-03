@@ -1,8 +1,3 @@
-import Button from 'components/common/Button'
-import ExerciseModal from 'components/common/ExerciseModal'
-import useDailyExerciseField from 'hooks/useDailyExerciseField'
-import DailyExerciseItem from 'components/daily/DailyExerciseItem'
-import { useMemo, useState } from 'react'
 import {
   DndContext,
   DragEndEvent,
@@ -14,7 +9,12 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { Exercise, ExerciseType } from '@prisma/client'
+import Button from 'components/common/Button'
+import ExerciseModal from 'components/common/ExerciseModal'
+import DailyExerciseItem from 'components/daily/DailyExerciseItem'
+import useDailyExerciseField from 'hooks/useDailyExerciseField'
 import useModal from 'hooks/useExerciseModal'
+import { useMemo, useState } from 'react'
 import { PlusCircle } from 'react-feather'
 
 interface Props {
@@ -65,36 +65,41 @@ const DailyExerciseField = ({ prefix }: Props) => {
   return (
     <div>
       <h4 className="ml-4">Exercises</h4>
-      <div className="grid grid-cols-10 gap-2 mx-4 mt-4 text-sm text-neutral-500">
-        <label className="col-span-5">Name</label>
-        <label className="col-span-1">Min</label>
-        <label className="col-span-1">Max</label>
-        <label className="col-span-1">Split</label>
-      </div>
 
-      <div>
-        <DndContext
-          sensors={sensors}
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-        >
-          <SortableContext
-            items={fieldIds}
-            strategy={verticalListSortingStrategy}
-          >
-            {fields.map((field, index) => (
-              <DailyExerciseItem
-                key={field.id}
-                id={field.id}
-                data={field}
-                callback={removeExercise(index)}
-                prefix={`workouts.${prefix}.exercises.${index}`}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
-      </div>
+      {!fields.length && <p>No exercises added.</p>}
+      {fields.length > 0 && (
+        <div>
+          <div className="grid grid-cols-10 gap-2 mx-4 mt-4 text-sm text-neutral-500">
+            <label className="col-span-5">Name</label>
+            <label className="col-span-1">Min</label>
+            <label className="col-span-1">Max</label>
+            <label className="col-span-1">Split</label>
+          </div>
 
+          <div>
+            <DndContext
+              sensors={sensors}
+              onDragEnd={handleDragEnd}
+              onDragStart={handleDragStart}
+            >
+              <SortableContext
+                items={fieldIds}
+                strategy={verticalListSortingStrategy}
+              >
+                {fields.map((field, index) => (
+                  <DailyExerciseItem
+                    key={field.id}
+                    id={field.id}
+                    data={field}
+                    callback={removeExercise(index)}
+                    prefix={`workouts.${prefix}.exercises.${index}`}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          </div>
+        </div>
+      )}
       <Button
         callback={toggleModal}
         className="block mx-auto mt-4"

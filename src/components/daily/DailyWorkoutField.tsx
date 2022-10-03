@@ -1,7 +1,7 @@
 import Button from 'components/common/Button'
-import useDailyWorkout from 'src/hooks/useDailyWorkoutField'
 import FormInput from 'components/common/form/FormInput'
 import DailyExerciseField from 'components/daily/DailyExerciseField'
+import useDailyWorkout from 'hooks/useDailyWorkoutField'
 import { Plus, Trash } from 'react-feather'
 
 const DailyWorkoutField = () => {
@@ -13,6 +13,7 @@ const DailyWorkoutField = () => {
   return (
     <section>
       <h2 className="ml-4">Workouts</h2>
+      {!fields.length && <p>No workouts added.</p>}
       {fields.map((field, index) => (
         <div key={field.id}>
           <div className="flex items-center justify-between mt-4">

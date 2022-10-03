@@ -1,9 +1,9 @@
 import { Exercise } from '@prisma/client'
 import ExerciseList from 'components/exercise/ExerciseList'
-import React, { FunctionComponent, useContext, useState } from 'react'
-import ExerciseContext from 'context/exerciseContext'
+import React, { FunctionComponent, useState } from 'react'
 import Button from 'components/common/Button'
 import { X } from 'react-feather'
+import { trpc } from 'utils/trpc'
 
 interface ModalProps {
   isShown: boolean
@@ -17,7 +17,9 @@ const ExerciseModal: FunctionComponent<ModalProps> = ({
   callback,
 }) => {
   const [search, setSearch] = useState('')
-  const exercises = useContext(ExerciseContext)
+  // const exercises = useContext(ExerciseContext)
+  const { data } = trpc.useQuery(['exercise.getAll'])
+  const exercises = data ? data : []
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)

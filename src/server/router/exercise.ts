@@ -8,11 +8,9 @@ const selectExerciseInput = z.array(exerciseSchema.keyof()).optional()
 
 export const exerciseRouter = createRouter()
   .query('getAll', {
-    input: selectExerciseInput,
-    async resolve({ input, ctx }) {
-      return await ctx.prisma.exercise.findMany({
-        select: selectedInput(input),
-      })
+    async resolve({ ctx }) {
+      const exercises = await ctx.prisma.exercise.findMany()
+      return exercises
     },
   })
   .query('getById', {
