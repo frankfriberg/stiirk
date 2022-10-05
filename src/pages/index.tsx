@@ -1,9 +1,11 @@
+import { NavBar } from 'components/navbar/NavBar'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 
 const Home: NextPage = () => {
   return (
     <div>
+      <NavBar />
       <Link href="/exercises">
         <a>Exercises</a>
       </Link>
