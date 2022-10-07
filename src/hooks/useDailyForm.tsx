@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DailyFormProps } from 'components/daily/DailyForm'
 import { dailySchema, DailySchema } from 'lib/validation/daily'
-import { useRouter } from 'next/router'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { trpc } from 'utils/trpc'
 
@@ -17,7 +16,6 @@ const defaultDaily: DailySchema = {
 }
 
 const useDailyForm = ({ put, dailyFill }: DailyFormProps) => {
-  const router = useRouter()
   const methods = useForm<DailySchema>({
     defaultValues: !dailyFill ? defaultDaily : dailyFill,
     resolver: zodResolver(dailySchema),
