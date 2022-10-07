@@ -36,7 +36,7 @@ model DailyWorkout {
   id                String          @id @default(cuid())
   name              String
   numberOfExercises Int
-  dailyId           String
+  dailyId           String          @unique
   exercises         DailyExercise[]
   daily             Daily           @relation(fields: [dailyId], references: [id])
 }
@@ -47,8 +47,8 @@ model DailyExercise {
   min            Int
   split          Boolean
   type           ExerciseType @default(reps)
-  exerciseId     String
-  dailyWorkoutId String
+  exerciseId     String       @unique
+  dailyWorkoutId String       @unique
   exercise       Exercise     @relation(fields: [exerciseId], references: [id])
   dailyWorkouts  DailyWorkout @relation(fields: [dailyWorkoutId], references: [id])
 }
@@ -66,7 +66,7 @@ model Exercise {
   updatedAt       DateTime          @updatedAt
   dailyExercises  DailyExercise[]
   workoutRound    WorkoutRound[]
-  ExerciseRequest ExerciseRequest[]
+  exerciseRequest ExerciseRequest[]
 }
 
 enum Request {
