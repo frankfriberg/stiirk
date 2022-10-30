@@ -1,6 +1,6 @@
 // src/server/router/index.ts
-import { createRouter } from './context'
 import superjson from 'superjson'
+import { createRouter } from './context'
 
 import { dailyRouter, userDailyRouter } from './daily'
 import {
@@ -9,10 +9,12 @@ import {
   exerciseRouter,
   requestRouter,
 } from './exercise'
+import { userRouter } from './user'
 import { userWorkoutRouter, workoutRouter } from './workout'
 
 export const appRouter = createRouter()
   .transformer(superjson)
+  .merge('user.', userRouter)
   .merge('daily.', dailyRouter)
   .merge('daily.u.', userDailyRouter)
   .merge('exercise.', exerciseRouter)

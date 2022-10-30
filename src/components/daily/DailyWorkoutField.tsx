@@ -23,7 +23,7 @@ const DailyWorkoutField = () => {
             <Button
               size="small"
               icon={Trash}
-              style="red"
+              color="red"
               callback={removeWorkout(index)}
             />
           </div>
@@ -39,10 +39,11 @@ const DailyWorkoutField = () => {
       <Button
         callback={addNewWorkout}
         className="block mx-auto"
-        style="black"
+        color="black"
         icon={Plus}
-        label="Add Workout"
-      />
+      >
+        Add Workout
+      </Button>
     </section>
   )
 }

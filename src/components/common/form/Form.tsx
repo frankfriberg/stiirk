@@ -1,32 +1,26 @@
 import React from 'react'
-import { FieldValues, SubmitHandler, useFormContext } from 'react-hook-form'
-
-interface FormProps {
+import { FormProvider, SubmitHandler, UseFormReturn } from 'react-hook-form'
+interface FormProps<TFormValues extends Record<string, unknown>> {
   children: JSX.Element | JSX.Element[]
-  onSubmit: SubmitHandler<FieldValues>
+  onSubmit: SubmitHandler<TFormValues>
+  methods: UseFormReturn<TFormValues>
 }
 
-export default function Form({ children, onSubmit }: FormProps) {
-  const methods = useFormContext()
-
+const Form = <TFormValues extends Record<string, unknown>>({
+  children,
+  onSubmit,
+  methods,
+}: FormProps<TFormValues>) => {
   return (
-    <form onSubmit={methods.handleSubmit(onSubmit)}>
-      {React.Children.map(children, (child) => {
-        return child.props.name
-          ? React.createElement(child.type, {
-              ...{
-                ...child.props,
-                register: methods.register,
-                key: child.props.name,
-              },
-            })
-          : child
-      })}
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
       <div>
         <pre>
           <code>{JSON.stringify(methods.watch(), null, 2)}</code>
         </pre>
       </div>
-    </form>
+    </FormProvider>
   )
 }
+
+export default Form

@@ -1,42 +1,32 @@
-import React from 'react'
-import classNames from 'classnames'
-import {
-  RegisterOptions,
-  DeepMap,
-  FieldError,
-  Path,
-  useFormContext,
-} from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
-import { get } from 'lodash'
-import Input, { InputProps } from 'components/common/Input'
+import classNames from 'classnames'
 import { FormErrorMessage } from 'components/common/FormErrorMessage'
+import Input, { InputProps } from 'components/common/Input'
+import { get } from 'lodash'
+import React from 'react'
+import { Path, RegisterOptions, useFormContext } from 'react-hook-form'
 
-type FormInputProps<TFormValues> = {
+type FormInputProps<TFormValues extends Record<string, unknown>> = {
   name: Path<TFormValues>
+  options?: RegisterOptions
   inline?: boolean
   subtitle?: string
-  rules?: RegisterOptions
-  errors?: Partial<DeepMap<TFormValues, FieldError>>
 } & Omit<InputProps, 'name'>
 
 const FormInput = <TFormValues extends Record<string, unknown>>({
   name,
+  options,
   inline = false,
   subtitle,
-  rules,
   className,
   ...props
 }: FormInputProps<TFormValues>): React.ReactElement => {
-  // If the name is in a FieldArray, it will be 'fields.index.fieldName' and errors[name] won't return anything, so we are using lodash get
   const {
     register,
     formState: { errors },
   } = useFormContext()
   const errorMessages = get(errors, name)
   const hasError = !!(errors && errorMessages)
-
-  const numberRule = props.type == 'number' && { valueAsNumber: true }
 
   const inputClasses = 'flex items-center justify-between'
   const errorClasses =
@@ -63,7 +53,7 @@ const FormInput = <TFormValues extends Record<string, unknown>>({
             'appearance-none w-full px-4 py-2 rounded-md border focus:ring-1 focus:border-black ring-black'
           )}
           {...props}
-          {...(register && register(name, { ...rules, ...numberRule }))}
+          {...(register && register(name, options))}
         />
         {subtitle && (
           <span className="ml-4 text-xs text-neutral-500">{subtitle}</span>
@@ -71,7 +61,8 @@ const FormInput = <TFormValues extends Record<string, unknown>>({
       </label>
       <ErrorMessage
         errors={errors}
-        name={name}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        name={name as any}
         render={({ message }) => (
           <FormErrorMessage className="mt-1">{message}</FormErrorMessage>
         )}

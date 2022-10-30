@@ -1,17 +1,17 @@
-import React, { forwardRef, ForwardRefRenderFunction } from 'react'
 import classNames from 'classnames'
+import React, { forwardRef } from 'react'
 import { Icon as IconType } from 'react-feather'
 import Icon from './Icon'
 
-interface ButtonProps {
-  label?: string
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: IconType
   shape?: 'circle' | 'rounded'
-  style?: 'white' | 'black' | 'red' | 'blue' | 'green'
+  color?: 'white' | 'black' | 'red' | 'blue' | 'green'
   size?: 'small' | 'normal' | 'big'
   className?: string
   type?: 'button' | 'submit'
   callback?(): void
+  children?: React.ReactNode
 }
 
 const iconStyles = {
@@ -47,32 +47,44 @@ const styles = {
   },
 }
 
-const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = ({
-  label = '',
-  icon: FeatherIcon,
-  shape = 'circle',
-  style = 'white',
-  size = 'normal',
-  className,
-  type = 'button',
-  callback,
-}: ButtonProps): React.ReactElement => {
-  return (
-    <button
-      type={type}
-      onClick={callback}
-      className={classNames(
-        className,
-        styles[shape],
-        styles[style],
-        styles[size].styling,
-        'border flex items-center'
-      )}
-    >
-      {FeatherIcon && <Icon className={iconStyles[style]} icon={FeatherIcon} />}
-      {label}
-    </button>
-  )
-}
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      icon: FeatherIcon,
+      shape = 'circle',
+      color = 'white',
+      size = 'normal',
+      className,
+      type = 'button',
+      callback,
+      children,
+      ...props
+    }: ButtonProps,
+    ref
+  ) => {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        onClick={callback}
+        className={classNames(
+          className,
+          styles[shape],
+          styles[color],
+          styles[size].styling,
+          'border flex items-center'
+        )}
+        {...props}
+      >
+        {FeatherIcon && (
+          <Icon className={iconStyles[color]} icon={FeatherIcon} />
+        )}
+        {children}
+      </button>
+    )
+  }
+)
 
-export default forwardRef(Button)
+Button.displayName = 'Button'
+
+export default Button

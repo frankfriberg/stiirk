@@ -103,9 +103,10 @@ const DailyExerciseField = ({ prefix }: Props) => {
       <Button
         callback={toggleModal}
         className="block mx-auto mt-4"
-        label="Add Exercise"
         icon={PlusCircle}
-      />
+      >
+        Add Exercise
+      </Button>
       <ExerciseModal
         callback={addSelectedExercise}
         isShown={modalIsShown}

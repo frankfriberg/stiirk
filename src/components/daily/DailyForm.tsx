@@ -49,7 +49,7 @@ const DailyForm = ({ put = false, dailyFill }: DailyFormProps) => {
 
         <DailyWorkoutField />
 
-        <Button type="submit" label="Create New Workout" />
+        <Button type="submit">Create New Workout</Button>
       </form>
     </FormProvider>
   )
