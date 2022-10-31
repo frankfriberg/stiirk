@@ -72,9 +72,7 @@ const LoginPage: NextPage = () => {
       <Button icon={Facebook} callback={() => signIn('facebook')}>
         Sign in with Facebook
       </Button>
-      <Link href="/user/new">
-        <a>Don&#39;t have a user? Register here.</a>
-      </Link>
+      <Link href="/user/new">Don&#39;t have a user? Register here.</Link>
     </div>
   )
 }

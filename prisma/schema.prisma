@@ -170,11 +170,16 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum Roles {
+  user
+  editor
+  admin
+}
+
 model User {
   id               String            @id @default(cuid())
   username         String?           @unique
-  isAdmin          Boolean           @default(false)
-  isEditor         Boolean           @default(false)
+  role             Roles             @default(user)
   name             String?
   password         String?
   email            String?           @unique

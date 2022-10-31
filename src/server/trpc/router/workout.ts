@@ -1,8 +1,7 @@
 import { selectedInput } from 'lib/selectedInput'
 import { workoutSchema, WorkoutSchema } from 'lib/validation/workout'
 import { z } from 'zod'
-import { createRouter } from './context'
-import { createProtectedRouter } from './protected-router'
+import { publicProcedure, router, userProcedure } from '../trpc'
 
 const selectWorkoutInput = z.array(workoutSchema.keyof()).optional()
 
@@ -36,11 +35,54 @@ const createWorkoutObject = (input: WorkoutSchema) => {
   }
 }
 
-export const userWorkoutRouter = createProtectedRouter()
+export const workoutRouter = router({
+  // PUBLIC
+  // Lists all public workouts
+  getAll: publicProcedure
+    .input(selectWorkoutInput)
+    .query(async ({ input, ctx }) => {
+      return await ctx.prisma.workout.findMany({
+        where: {
+          public: true,
+        },
+        select: selectedInput(input),
+      })
+    }),
+  // Returns a single workout by ID
+  getById: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
+    return await ctx.prisma.workout.findFirst({
+      where: {
+        id: input,
+        AND: [
+          {
+            public: true,
+          },
+        ],
+      },
+    })
+  }),
+  // Returns workout run by ID, same function as getTodaysDaily
+  getRunById: publicProcedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      const workout = await ctx.prisma.workout.findFirst({
+        where: {
+          id: input,
+          AND: [
+            {
+              public: true,
+            },
+          ],
+        },
+      })
+      return workout
+    }),
+
+  // USER
   // Creates a new Workout
-  .mutation('create', {
-    input: workoutSchema,
-    async resolve({ ctx, input }) {
+  create: userProcedure
+    .input(workoutSchema)
+    .mutation(async ({ input, ctx }) => {
       return await ctx.prisma.workout.create({
         data: {
           ...createWorkoutObject(input),
@@ -51,27 +93,27 @@ export const userWorkoutRouter = createProtectedRouter()
           },
         },
       })
-    },
-  })
+    }),
   // Get list of own workouts
-  .query('getAllOwn', {
-    input: selectWorkoutInput,
-    async resolve({ ctx, input }) {
+  getAllOwn: userProcedure
+    .input(selectWorkoutInput)
+    .query(async ({ input, ctx }) => {
       return await ctx.prisma.workout.findMany({
         where: {
           userId: ctx.session.user.id,
         },
         select: selectedInput(input),
       })
-    },
-  })
-  // Updates workout by ID
-  .mutation('updateById', {
-    input: z.object({
-      id: z.string(),
-      data: workoutSchema,
     }),
-    async resolve({ ctx, input }) {
+  // Updates workout by ID
+  updateById: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        data: workoutSchema,
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
       return await ctx.prisma.workout.update({
         where: {
           workoutIdOwner: {
@@ -81,12 +123,11 @@ export const userWorkoutRouter = createProtectedRouter()
         },
         data: createWorkoutObject(input.data),
       })
-    },
-  })
+    }),
   // Archives workout by ID
-  .mutation('archiveById', {
-    input: z.string(),
-    async resolve({ ctx, input }) {
+  archiveById: userProcedure
+    .input(z.string())
+    .mutation(async ({ input, ctx }) => {
       return await ctx.prisma.workout.update({
         where: {
           workoutIdOwner: {
@@ -98,42 +139,5 @@ export const userWorkoutRouter = createProtectedRouter()
           archived: true,
         },
       })
-    },
-  })
-
-export const workoutRouter = createRouter()
-  // Lists all viewable workouts
-  .query('getAll', {
-    input: selectWorkoutInput,
-    async resolve({ input, ctx }) {
-      return await ctx.prisma.workout.findMany({
-        where: {
-          public: true,
-        },
-        select: selectedInput(input),
-      })
-    },
-  })
-  // Returns a single workout by ID
-  .query('getById', {
-    input: z.string(),
-    async resolve({ ctx, input }) {
-      return await ctx.prisma.workout.findUnique({
-        where: {
-          id: input,
-        },
-      })
-    },
-  })
-  // Returns workout run by ID, same function as getTodaysDaily
-  .query('getRunById', {
-    input: z.string(),
-    async resolve({ ctx, input }) {
-      const workout = await ctx.prisma.workout.findUnique({
-        where: {
-          id: input,
-        },
-      })
-      return workout
-    },
-  })
+    }),
+})

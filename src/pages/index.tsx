@@ -6,15 +6,9 @@ const Home: NextPage = () => {
   return (
     <div>
       <NavBar />
-      <Link href="/exercises">
-        <a>Exercises</a>
-      </Link>
-      <Link href="/daily">
-        <a>Daily</a>
-      </Link>
-      <Link href="/workouts">
-        <a>Workouts</a>
-      </Link>
+      <Link href="/exercises">Exercises</Link>
+      <Link href="/daily">Daily</Link>
+      <Link href="/workouts">Workouts</Link>
     </div>
   )
 }

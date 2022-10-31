@@ -1,4 +1,5 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
+
 import CredentialsProvider from 'next-auth/providers/credentials'
 import EmailProvider from 'next-auth/providers/email'
 import FacebookProvider from 'next-auth/providers/facebook'
@@ -9,7 +10,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { verify } from 'argon2'
 import { env } from 'lib/env/server.mjs'
 import { loginSchema } from 'lib/validation/user'
-import { prisma } from '../../../utils/prisma'
+import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
   pages: {
